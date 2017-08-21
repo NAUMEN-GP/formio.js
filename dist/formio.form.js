@@ -7644,83 +7644,63 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
     key: 'wysiwygDefault',
     value: function wysiwygDefault() {
       return {
-        theme: 'snow',
-        modules: {
-          toolbar: [[{ 'size': ['small', false, 'large', 'huge'] }], // custom dropdown
-          [{ 'header': [1, 2, 3, 4, 5, 6, false] }], [{ 'font': [] }], ['bold', 'italic', 'underline', 'strike', { 'script': 'sub' }, { 'script': 'super' }, 'clean'], [{ 'color': [] }, { 'background': [] }], [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }, { 'align': [] }], ['blockquote', 'code-block'], ['link', 'image', 'video', 'formula', 'source']]
-        }
+        toolbarGroups: [{ name: 'basicstyles', groups: ['basicstyles', 'cleanup'] }, { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] }, { name: 'links', groups: ['links'] }, { name: 'insert', groups: ['insert'] }, '/', { name: 'styles', groups: ['Styles', 'Format', 'Font', 'FontSize'] }, { name: 'colors', groups: ['colors'] }, { name: 'clipboard', groups: ['clipboard', 'undo'] }, { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] }, { name: 'document', groups: ['mode', 'document', 'doctools'] }, { name: 'others', groups: ['others'] }, { name: 'tools', groups: ['tools'] }],
+        extraPlugins: 'justify,font',
+        removeButtons: 'Cut,Copy,Paste,Underline,Subscript,Superscript,Scayt,About',
+        uiColor: '#eeeeee',
+        height: '400px',
+        width: '100%'
       };
     }
   }, {
     key: 'createInput',
     value: function createInput(container) {
-      var _this2 = this;
-
+      var t = this;
       if (!this.component.wysiwyg) {
         return _get(TextAreaComponent.prototype.__proto__ || Object.getPrototypeOf(TextAreaComponent.prototype), 'createInput', this).call(this, container);
       }
 
-      // Normalize the configurations.
-      if (this.component.wysiwyg.toolbarGroups) {
-        console.warn('The WYSIWYG settings are configured for CKEditor. For this renderer, you will need to use configurations for the Quill Editor. See https://quilljs.com/docs/configuration for more information.');
-        this.component.wysiwyg = this.wysiwygDefault();
-      }
       if (typeof this.component.wysiwyg === 'boolean') {
         this.component.wysiwyg = this.wysiwygDefault();
       }
 
       // Add the input.
-      this.input = this.ce('div', {
-        class: 'formio-wysiwyg-editor'
+      this.input = this.ce('textarea', {
+        class: 'form-control'
       });
       container.appendChild(this.input);
 
-      // Lazy load the quill css.
-      _Base.BaseComponent.requireLibrary('quill-css-' + this.component.wysiwyg.theme, 'Quill', [{ type: 'styles', src: 'https://cdn.quilljs.com/1.2.6/quill.' + this.component.wysiwyg.theme + '.css' }], true);
+      var originalChange = function originalChange(e) {};
+      var settings = this.component.wysiwyg;
 
-      // Lazy load the quill library.
-      this.quillReady = _Base.BaseComponent.requireLibrary('quill', 'Quill', 'https://cdn.quilljs.com/1.2.6/quill.min.js', true).then(function () {
-        _this2.quill = new Quill(_this2.input, _this2.component.wysiwyg);
+      if (settings.on && settings.on.change && typeof settings.on.change == "function") {
+        originalChange = settings.on.change;
+      }
 
-        /** This block of code adds the [source] capabilities.  See https://codepen.io/anon/pen/ZyEjrQ **/
-        var txtArea = document.createElement('textarea');
-        txtArea.setAttribute('class', 'quill-source-code');
-        _this2.quill.addContainer('ql-custom').appendChild(txtArea);
-        document.querySelector('.ql-source').addEventListener('click', function () {
-          if (txtArea.style.display === 'inherit') {
-            _this2.quill.clipboard.dangerouslyPasteHTML(txtArea.value);
-          }
-          txtArea.style.display = txtArea.style.display === 'none' ? 'inherit' : 'none';
-        });
-        /** END CODEBLOCK **/
+      if (!settings.on) {
+        settings.on = {};
+      }
 
-        _this2.quill.on('text-change', function () {
-          txtArea.value = _this2.quill.root.innerHTML;
-          _this2.updateValue(true);
-        });
+      settings.on.change = function (e) {
+        t.updateValue(true);
+        originalChange(e);
+      };
 
-        if (_this2.options.readOnly || _this2.component.disabled) {
-          _this2.quill.disable();
-        }
+      if (this.options.readOnly || this.component.disabled) {
+        settings.readOnly = true;
+      }
 
-        return _this2.quill;
-      });
+      this.ckEditorInstance = CKEDITOR.replace(this.input, settings);
 
       return this.input;
     }
   }, {
     key: 'setValue',
     value: function setValue(value, flags) {
-      var _this3 = this;
-
       if (!this.component.wysiwyg) {
         return _get(TextAreaComponent.prototype.__proto__ || Object.getPrototypeOf(TextAreaComponent.prototype), 'setValue', this).call(this, value, flags);
       }
-
-      this.quillReady.then(function (quill) {
-        quill.clipboard.dangerouslyPasteHTML(value);
-        _this3.updateValue(flags);
-      });
+      this.ckEditorInstance.setData(value);
     }
   }, {
     key: 'getValue',
@@ -7729,8 +7709,8 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
         return _get(TextAreaComponent.prototype.__proto__ || Object.getPrototypeOf(TextAreaComponent.prototype), 'getValue', this).call(this);
       }
 
-      if (this.quill) {
-        return this.quill.root.innerHTML;
+      if (this.ckEditorInstance) {
+        return this.ckEditorInstance.getData();
       }
     }
   }, {
