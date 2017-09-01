@@ -20,10 +20,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var NumberComponent = exports.NumberComponent = function (_BaseComponent) {
   _inherits(NumberComponent, _BaseComponent);
 
-  function NumberComponent() {
+  function NumberComponent(component, options, data) {
     _classCallCheck(this, NumberComponent);
 
-    return _possibleConstructorReturn(this, (NumberComponent.__proto__ || Object.getPrototypeOf(NumberComponent)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (NumberComponent.__proto__ || Object.getPrototypeOf(NumberComponent)).call(this, component, options, data));
+
+    _this.validators = _this.validators.concat(['min', 'max']);
+    return _this;
   }
 
   _createClass(NumberComponent, [{

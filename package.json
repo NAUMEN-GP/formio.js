@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/formio/formio.js.git"
+    "url": "git+https://github.com/ahramcov/formio.js.git"
   },
   "contributors": [
     {
@@ -78,7 +78,7 @@
     "chance": "^0.8.0",
     "del": "^2.0.2",
     "fetch-mock": "^4.0.1",
-    "gulp": "^3.9.0",
+    "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-clean-css": "^2.3.2",
     "gulp-concat": "^2.6.1",

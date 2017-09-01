@@ -17,9 +17,9 @@ var _has2 = require('lodash/has');
 
 var _has3 = _interopRequireDefault(_has2);
 
-var _isArray2 = require('lodash/isArray');
+var _isNumber2 = require('lodash/isNumber');
 
-var _isArray3 = _interopRequireDefault(_isArray2);
+var _isNumber3 = _interopRequireDefault(_isNumber2);
 
 var _index = require('../utils/index');
 
@@ -90,6 +90,38 @@ var Validator = exports.Validator = {
           return true;
         }
         return !component.isEmpty(value);
+      }
+    },
+    min: {
+      key: 'validate.min',
+      message: function message(component, setting) {
+        return component.t('min', {
+          field: component.errorLabel,
+          min: parseFloat(setting)
+        });
+      },
+      check: function check(component, setting, value) {
+        var min = parseFloat(setting);
+        if (!min || !(0, _isNumber3.default)(value)) {
+          return true;
+        }
+        return parseFloat(value) >= min;
+      }
+    },
+    max: {
+      key: 'validate.max',
+      message: function message(component, setting) {
+        return component.t('max', {
+          field: component.errorLabel,
+          max: parseFloat(setting)
+        });
+      },
+      check: function check(component, setting, value) {
+        var max = parseFloat(setting);
+        if (!max || !(0, _isNumber3.default)(value)) {
+          return true;
+        }
+        return parseFloat(value) <= max;
       }
     },
     minLength: {

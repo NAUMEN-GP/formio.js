@@ -23,6 +23,10 @@ var _each2 = require('lodash/each');
 
 var _each3 = _interopRequireDefault(_each2);
 
+var _assign2 = require('lodash/assign');
+
+var _assign3 = _interopRequireDefault(_assign2);
+
 var _debounce2 = require('lodash/debounce');
 
 var _debounce3 = _interopRequireDefault(_debounce2);
@@ -88,7 +92,23 @@ var BaseComponent = function () {
     /**
      * The i18n configuration for this component.
      */
-    this.options.i18n = this.options.i18n || require('../../locals/en');
+    var i18n = require('../../i18n');
+    if (options && options.i18n) {
+      // Support legacy way of doing translations.
+      if (options.i18n.resources) {
+        i18n = options.i18n;
+      } else {
+        (0, _each3.default)(options.i18n, function (lang, code) {
+          if (!i18n.resources[code]) {
+            i18n.resources[code] = { translation: lang };
+          } else {
+            (0, _assign3.default)(i18n.resources[code].translation, lang);
+          }
+        });
+      }
+    }
+
+    this.options.i18n = i18n;
 
     /**
      * The events that are triggered for the whole FormioForm object.
@@ -238,9 +258,21 @@ var BaseComponent = function () {
   _createClass(BaseComponent, [{
     key: 't',
     value: function t(text, params) {
-      var message = _i18next2.default.t(text, params);
-      return message;
+      params = params || {};
+      params.component = this.component;
+      return _i18next2.default.t(text, params);
     }
+
+    /**
+     * Sets the language for this form.
+     *
+     * @param lang
+     * @return {*}
+     */
+
+  }, {
+    key: 'on',
+
 
     /**
      * Register for a new event within this component.
@@ -260,9 +292,6 @@ var BaseComponent = function () {
      * @param {function} cb - The callback handler to handle this event.
      * @param {boolean} internal - This is an internal event handler.
      */
-
-  }, {
-    key: 'on',
     value: function on(event, cb, internal) {
       if (!this.events) {
         return;
@@ -375,7 +404,7 @@ var BaseComponent = function () {
 
       // Set default values.
       var defaultValue = this.defaultValue;
-      if (defaultValue) {
+      if (!this.data.hasOwnProperty(this.component.key) && defaultValue) {
         this.setValue(defaultValue);
       }
     }
@@ -818,6 +847,12 @@ var BaseComponent = function () {
       } else if ('attachEvent' in obj) {
         obj.attachEvent('on' + evt, func);
       }
+    }
+  }, {
+    key: 'redraw',
+    value: function redraw() {
+      this.clear();
+      this.build();
     }
 
     /**
@@ -1423,28 +1458,41 @@ var BaseComponent = function () {
   }, {
     key: 'elementInfo',
     value: function elementInfo() {
-      var _this11 = this;
-
       var attributes = {
         name: this.options.name,
         type: this.component.inputType || 'text',
         class: 'form-control'
       };
-      (0, _each3.default)({
-        tabindex: 'tabindex',
-        placeholder: 'placeholder'
-      }, function (path, prop) {
-        var attrValue = (0, _get3.default)(_this11.component, path);
-        if (attrValue) {
-          attributes[prop] = attrValue;
-        }
-      });
+
+      if (this.component.placeholder) {
+        attributes.placeholder = this.t(this.component.placeholder);
+      }
+
+      if (this.component.tabindex) {
+        attributes.tabindex = this.component.tabindex;
+      }
+
       return {
         type: 'input',
         component: this.component,
         changeEvent: 'change',
         attr: attributes
       };
+    }
+  }, {
+    key: 'language',
+    set: function set(lang) {
+      var _this11 = this;
+
+      return new _nativePromiseOnly2.default(function (resolve, reject) {
+        _i18next2.default.changeLanguage(lang, function (err) {
+          if (err) {
+            return reject(err);
+          }
+          _this11.redraw();
+          resolve();
+        });
+      });
     }
   }, {
     key: 'className',
@@ -1519,7 +1567,7 @@ var BaseComponent = function () {
   }, {
     key: 'name',
     get: function get() {
-      return this.component.label || this.component.placeholder || this.component.key;
+      return this.t(this.component.label || this.component.placeholder || this.component.key);
     }
 
     /**
@@ -1530,7 +1578,7 @@ var BaseComponent = function () {
   }, {
     key: 'errorLabel',
     get: function get() {
-      return this.component.errorLabel || this.component.label || this.component.placeholder || this.component.key;
+      return this.t(this.component.errorLabel || this.component.label || this.component.placeholder || this.component.key);
     }
   }, {
     key: 'visible',

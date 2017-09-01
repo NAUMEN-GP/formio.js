@@ -369,6 +369,8 @@ var FormioComponents = exports.FormioComponents = function (_BaseComponent) {
       (0, _each3.default)(components, function (comp) {
         return _this5.removeComponent(comp, _this5.components);
       });
+      this.components = [];
+      this.hidden = [];
     }
   }, {
     key: 'setHidden',
