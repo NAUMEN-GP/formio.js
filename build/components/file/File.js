@@ -50,7 +50,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
   }, {
     key: 'setValue',
     value: function setValue(value) {
-      this.data[this.component.key] = value;
+      this.data[this.component.key] = value || [];
       this.refreshDOM();
     }
   }, {
@@ -121,7 +121,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
           _this3.refreshDOM();
           _this3.triggerChange();
         }
-      }) : null), this.ce('div', { class: 'col-md-9' }, this.createFileLink(fileInfo)), this.ce('div', { class: 'col-md-2' }, this.fileSize(fileInfo.size))]));
+      }) : null), this.ce('div', { class: 'col-md-9' }, this.createFileLink(fileInfo.data)), this.ce('div', { class: 'col-md-2' }, this.fileSize(fileInfo.size))]));
     }
   }, {
     key: 'createFileLink',
@@ -137,7 +137,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       var _this4 = this;
 
       return this.ce('div', {}, this.data[this.component.key].map(function (fileInfo, index) {
-        return _this4.createImageListItem(fileInfo, index);
+        return _this4.createImageListItem(fileInfo.data, index);
       }));
     }
   }, {
