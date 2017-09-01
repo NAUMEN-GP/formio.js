@@ -18,7 +18,7 @@ export class FileComponent extends BaseComponent {
   }
 
   setValue(value) {
-    this.data[this.component.key] = value;
+    this.data[this.component.key] = value || [];
     this.refreshDOM();
   }
 
@@ -105,7 +105,7 @@ export class FileComponent extends BaseComponent {
                 null
             )
           ),
-          this.ce('div', {class: 'col-md-9'}, this.createFileLink(fileInfo)),
+          this.ce('div', {class: 'col-md-9'}, this.createFileLink(fileInfo.data)),
           this.ce('div', {class: 'col-md-2'}, this.fileSize(fileInfo.size))
         ]
       )
@@ -121,7 +121,7 @@ export class FileComponent extends BaseComponent {
 
   buildImageList() {
     return this.ce('div', {},
-      this.data[this.component.key].map((fileInfo, index) => this.createImageListItem(fileInfo, index))
+      this.data[this.component.key].map((fileInfo, index) => this.createImageListItem(fileInfo.data, index))
     );
   }
 
