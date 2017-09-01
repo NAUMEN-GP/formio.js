@@ -7,6 +7,7 @@ var Promise = require("native-promise-only");
 require('whatwg-fetch');
 var EventEmitter = require('eventemitter2').EventEmitter2;
 var copy = require('shallow-copy');
+var cookies = require('browser-cookies');
 
 /**
  * The Formio interface class.
@@ -392,19 +393,14 @@ export class Formio {
       });
     }
 
-    let download = '';
-    download = Formio.baseUrl;
-    if (form.project) {
-      download += '/project/' + form.project;
-    }
-    download += '/form/' + form._id;
-    download += '/submission/' + this.submissionId;
-    download += '/download';
-    if (form.settings && form.settings.pdf) {
-      download += '/' + form.settings.pdf.id;
-    }
+    let apiUrl = '/project/' + form.project;
+    apiUrl += '/form/' + form._id;
+    apiUrl += '/submission/' + this.submissionId;
+    apiUrl += '/download';
+
+    let download = Formio.baseUrl + apiUrl;
     return new Promise((resolve, reject) => {
-      this.getTempToken(3600, 'GET:' + download.replace(Formio.baseUrl, '')).then((tempToken) => {
+      this.getTempToken(3600, 'GET:' + apiUrl).then((tempToken) => {
         download += '?token=' + tempToken.key;
         resolve(download);
       }, () => {
@@ -615,13 +611,16 @@ export class Formio {
       options.body = JSON.stringify(data);
     }
 
-    var requestToken = headers.get('x-jwt-token');
-
     // Allow plugins to alter the options.
     options = Formio.pluginAlter('requestOptions', options, url);
 
+    var requestToken = options.headers.get('x-jwt-token');
+
     var requestPromise = fetch(url, options)
       .then(function(response) {
+        // Allow plugins to respond.
+        response = Formio.pluginAlter('requestResponse', response, Formio);
+
         if (!response.ok) {
           if (response.status === 440) {
             Formio.setToken(null);
@@ -750,7 +749,12 @@ export class Formio {
       Formio.setUser(null);
       // iOS in private browse mode will throw an error but we can't detect ahead of time that we are in private mode.
       try {
-        return localStorage.removeItem('formioToken');
+        if (typeof(Storage) !== "undefined") {
+          return localStorage.removeItem('formioToken');
+        }
+        else {
+          return cookies.erase('formioToken');
+        }
       }
       catch(err) {
         return;
@@ -758,7 +762,12 @@ export class Formio {
     }
     // iOS in private browse mode will throw an error but we can't detect ahead of time that we are in private mode.
     try {
-      localStorage.setItem('formioToken', token);
+      if (typeof(Storage) !== "undefined") {
+        localStorage.setItem('formioToken', token);
+      }
+      else {
+        cookies.set('formioToken', token);
+      }
     }
     catch(err) {
       // Do nothing.
@@ -769,9 +778,13 @@ export class Formio {
   static getToken() {
     if (this.token) { return this.token; }
     try {
-      var token = localStorage.getItem('formioToken') || '';
-      this.token = token;
-      return token;
+      if (typeof(Storage) !== "undefined") {
+        this.token = localStorage.getItem('formioToken') || '';
+      }
+      else {
+        this.token = cookies.get('formioToken');
+      }
+      return this.token;
     }
     catch (e) {
       return '';
@@ -783,7 +796,12 @@ export class Formio {
       this.setToken(null);
       // iOS in private browse mode will throw an error but we can't detect ahead of time that we are in private mode.
       try {
-        return localStorage.removeItem('formioUser');
+        if (typeof(Storage) !== "undefined") {
+          return localStorage.removeItem('formioUser');
+        }
+        else {
+          return cookies.erase('formioUser');
+        }
       }
       catch(err) {
         return;
@@ -791,7 +809,12 @@ export class Formio {
     }
     // iOS in private browse mode will throw an error but we can't detect ahead of time that we are in private mode.
     try {
-      localStorage.setItem('formioUser', JSON.stringify(user));
+      if (typeof(Storage) !== "undefined") {
+        localStorage.setItem('formioUser', JSON.stringify(user));
+      }
+      else {
+        cookies.set('formioUser', JSON.stringify(user));
+      }
     }
     catch(err) {
       // Do nothing.
@@ -800,7 +823,12 @@ export class Formio {
 
   static getUser() {
     try {
-      return JSON.parse(localStorage.getItem('formioUser') || null);
+      if (typeof(Storage) !== "undefined") {
+        return JSON.parse(localStorage.getItem('formioUser') || null);
+      }
+      else {
+        return JSON.parse(cookies.get('formioUser'));
+      }
     }
     catch (e) {
       return;

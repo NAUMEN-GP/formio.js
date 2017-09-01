@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+## 2.16.0
+### Added
+ - Cookie fallback for storing tokens and user values.
+
+### Fixed
+ - Default values overriding values when new form is set.
+
+## 2.15.2
+### Added
+ - Ability to respond to ajax requests in a plugin.
+
+## 2.15.1
+### Added
+ - Ability to introduce custom file service classes.
+
+### Fixed
+ - The PDF download url logic to return the correct download url.
+
+## 2.15.0
+### Added
+ - Better multi-language support.
+ - Min and Max validation checks for number fields.
+
 ## 2.14.1
 ### Fixed
  - Some minor crashes with the PDF renderings.
