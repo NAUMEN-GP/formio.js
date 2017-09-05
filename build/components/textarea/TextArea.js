@@ -89,6 +89,7 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
         return _get(TextAreaComponent.prototype.__proto__ || Object.getPrototypeOf(TextAreaComponent.prototype), 'setValue', this).call(this, value, flags);
       }
       this.ckEditorInstance.setData(value);
+      this.updateValue(flags);
     }
   }, {
     key: 'getValue',

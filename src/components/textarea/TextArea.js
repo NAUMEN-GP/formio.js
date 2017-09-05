@@ -69,6 +69,7 @@ export class TextAreaComponent extends TextFieldComponent {
       return super.setValue(value, flags);
     }
     this.ckEditorInstance.setData(value);
+    this.updateValue(flags);
   }
 
   getValue() {
