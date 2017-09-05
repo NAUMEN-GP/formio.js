@@ -7374,6 +7374,7 @@ var SignatureComponent = exports.SignatureComponent = function (_BaseComponent) 
           var ctx = canvas.getContext("2d");
           ctx.fillStyle = this.signaturePad.backgroundColor;
           ctx.fillRect(0, 0, canvas.width, canvas.height);
+          this.signaturePad.fromDataURL(this.getValue());
         }
         setTimeout(checkWidth.bind(this), 200);
       }.bind(this), 200);
