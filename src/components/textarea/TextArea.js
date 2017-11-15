@@ -90,4 +90,10 @@ export class TextAreaComponent extends TextFieldComponent {
     }
     return info;
   }
+
+  destroy(){
+      if(this.ckEditorInstance){
+          CKEDITOR.remove(this.ckEditorInstance);
+      }
+  }
 }

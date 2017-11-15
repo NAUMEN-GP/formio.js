@@ -112,6 +112,13 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
       }
       return info;
     }
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      if (this.ckEditorInstance) {
+        CKEDITOR.remove(this.ckEditorInstance);
+      }
+    }
   }]);
 
   return TextAreaComponent;
