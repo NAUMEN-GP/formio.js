@@ -7820,6 +7820,7 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
     value: function destroy() {
       if (this.ckEditorInstance) {
         CKEDITOR.remove(this.ckEditorInstance);
+        delete this.ckEditorInstance;
       }
     }
   }]);
