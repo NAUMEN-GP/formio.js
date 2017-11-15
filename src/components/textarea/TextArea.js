@@ -43,18 +43,6 @@ export class TextAreaComponent extends TextFieldComponent {
 
     var settings = this.component.wysiwyg;
 
-    var originalChange = function(e) { };
-   /* if(settings.on && settings.on.change && typeof settings.on.change == "function") {
-      originalChange = settings.on.change;
-    }
-
-    if(!settings.on) { settings.on = {}; }
-
-    settings.on.change = function (e) {
-      t.updateValue(true);
-      originalChange(e);
-    }*/
-
     if (this.options.readOnly || this.component.disabled) {
       settings.readOnly = true;
     }
@@ -63,6 +51,7 @@ export class TextAreaComponent extends TextFieldComponent {
     this.ckEditorInstance.on('change', function(e){
         t.updateValue(true);
     });
+    this.ckEditorInstance.setData(this.data[this.component.key]);
     return this.input;
   }
 
