@@ -7761,28 +7761,17 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
       });
       container.appendChild(this.input);
 
-      var originalChange = function originalChange(e) {};
       var settings = this.component.wysiwyg;
-
-      if (settings.on && settings.on.change && typeof settings.on.change == "function") {
-        originalChange = settings.on.change;
-      }
-
-      if (!settings.on) {
-        settings.on = {};
-      }
-
-      settings.on.change = function (e) {
-        t.updateValue(true);
-        originalChange(e);
-      };
 
       if (this.options.readOnly || this.component.disabled) {
         settings.readOnly = true;
       }
 
       this.ckEditorInstance = CKEDITOR.replace(this.input, settings);
-
+      this.ckEditorInstance.on('change', function (e) {
+        t.updateValue(true);
+      });
+      this.ckEditorInstance.setData(this.data[this.component.key]);
       return this.input;
     }
   }, {
@@ -7814,6 +7803,15 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
         info.attr.rows = this.component.rows;
       }
       return info;
+    }
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      if (this.ckEditorInstance) {
+        this.ckEditorInstance.removeAllListeners();
+        CKEDITOR.remove(this.ckEditorInstance);
+        delete this.ckEditorInstance;
+      }
     }
   }]);
 
