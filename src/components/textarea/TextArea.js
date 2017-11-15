@@ -41,10 +41,10 @@ export class TextAreaComponent extends TextFieldComponent {
     });
     container.appendChild(this.input);
 
-    var originalChange = function(e) { };
     var settings = this.component.wysiwyg;
 
-    if(settings.on && settings.on.change && typeof settings.on.change == "function") {
+    var originalChange = function(e) { };
+   /* if(settings.on && settings.on.change && typeof settings.on.change == "function") {
       originalChange = settings.on.change;
     }
 
@@ -53,14 +53,16 @@ export class TextAreaComponent extends TextFieldComponent {
     settings.on.change = function (e) {
       t.updateValue(true);
       originalChange(e);
-    }
+    }*/
 
     if (this.options.readOnly || this.component.disabled) {
       settings.readOnly = true;
     }
 
     this.ckEditorInstance = CKEDITOR.replace(this.input, settings);
-
+    this.ckEditorInstance.on('change', function(e){
+        t.updateValue(true);
+    });
     return this.input;
   }
 

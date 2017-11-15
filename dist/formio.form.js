@@ -7761,28 +7761,26 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
       });
       container.appendChild(this.input);
 
-      var originalChange = function originalChange(e) {};
       var settings = this.component.wysiwyg;
 
-      if (settings.on && settings.on.change && typeof settings.on.change == "function") {
-        originalChange = settings.on.change;
-      }
-
-      if (!settings.on) {
-        settings.on = {};
-      }
-
-      settings.on.change = function (e) {
-        t.updateValue(true);
-        originalChange(e);
-      };
+      var originalChange = function originalChange(e) {};
+      /* if(settings.on && settings.on.change && typeof settings.on.change == "function") {
+         originalChange = settings.on.change;
+       }
+        if(!settings.on) { settings.on = {}; }
+        settings.on.change = function (e) {
+         t.updateValue(true);
+         originalChange(e);
+       }*/
 
       if (this.options.readOnly || this.component.disabled) {
         settings.readOnly = true;
       }
 
       this.ckEditorInstance = CKEDITOR.replace(this.input, settings);
-
+      this.ckEditorInstance.on('change', function (e) {
+        t.updateValue(true);
+      });
       return this.input;
     }
   }, {
