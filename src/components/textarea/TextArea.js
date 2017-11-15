@@ -93,6 +93,7 @@ export class TextAreaComponent extends TextFieldComponent {
 
   destroy(){
       if(this.ckEditorInstance){
+          this.ckEditorInstance.removeAllListeners();
           CKEDITOR.remove(this.ckEditorInstance);
           delete this.ckEditorInstance;
       }

@@ -116,6 +116,7 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
     key: 'destroy',
     value: function destroy() {
       if (this.ckEditorInstance) {
+        this.ckEditorInstance.removeAllListeners();
         CKEDITOR.remove(this.ckEditorInstance);
         delete this.ckEditorInstance;
       }
