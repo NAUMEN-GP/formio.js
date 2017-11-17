@@ -2027,7 +2027,7 @@ var BaseComponent = function () {
       this.labelElement.appendChild(this.text(this.component.label));
 
       if (this.component.tooltip) {
-        var tooltipElement = this.ce('i', {
+        var tooltipElement = this.ce('span', {
           class: 'glyphicon glyphicon-question-sign',
           tooltip: this.component.tooltip
         });

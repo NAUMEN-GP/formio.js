@@ -620,7 +620,7 @@ export class BaseComponent {
     this.labelElement.appendChild(this.text(this.component.label));
 
     if(this.component.tooltip) {
-        let tooltipElement = this.ce('i', {
+        let tooltipElement = this.ce('span', {
             class: 'glyphicon glyphicon-question-sign',
             tooltip: this.component.tooltip
         });
