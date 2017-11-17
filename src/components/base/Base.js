@@ -622,9 +622,7 @@ export class BaseComponent {
     if(this.component.tooltip) {
         let tooltipElement = this.ce('i', {
             class: 'glyphicon glyphicon-question-sign',
-            "uib-tooltip": this.component.tooltip,
-            "tooltip-placement": "right",
-            "tooltip-popup-close-delay": "100"
+            tooltip: this.component.tooltip
         });
         this.labelElement.appendChild(tooltipElement);
     }
