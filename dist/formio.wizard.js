@@ -2025,6 +2025,17 @@ var BaseComponent = function () {
         this.labelElement.setAttribute('for', this.info.attr.id);
       }
       this.labelElement.appendChild(this.text(this.component.label));
+
+      if (this.component.tooltip) {
+        var tooltipElement = this.ce('i', {
+          class: 'glyphicon glyphicon-question-sign',
+          "uib-tooltip": this.component.tooltip,
+          "tooltip-placement": "right",
+          "tooltip-popup-close-delay": "100"
+        });
+        this.labelElement.appendChild(tooltipElement);
+      }
+
       container.appendChild(this.labelElement);
     }
 
