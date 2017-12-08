@@ -7170,7 +7170,7 @@ var SelectBoxesComponent = exports.SelectBoxesComponent = function (_RadioCompon
           _this2.value[val] = true;
         });
       } else {
-        this.value = value;
+        this.value = value ? value : {};
       }
 
       (0, _each3.default)(this.inputs, function (input) {
