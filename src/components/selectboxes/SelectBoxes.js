@@ -55,7 +55,7 @@ export class SelectBoxesComponent extends RadioComponent {
       });
     }
     else {
-      this.value = value;
+      this.value = value ? value : {};
     }
 
     _each(this.inputs, (input) => {
