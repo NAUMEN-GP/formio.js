@@ -138,10 +138,10 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
     value: function getDate(value) {
       var timestamp = parseInt(value, 10);
       if (!timestamp) {
-        // Just default to today.
-        return new Date();
+        return null;
+      } else {
+        return new Date(timestamp * 1000);
       }
-      return new Date(timestamp * 1000);
     }
   }, {
     key: 'getRawValue',
@@ -158,14 +158,18 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
   }, {
     key: 'getValueAt',
     value: function getValueAt(index) {
-      return this.getDate(this.inputs[index].value).toISOString();
+      var date = this.getDate(this.inputs[index].value);
+      if (date) {
+        return date.toISOString();
+      } else {
+        return null;
+      }
     }
   }, {
     key: 'setValueAt',
     value: function setValueAt(index, value) {
-      if (this.inputs[index].calendar) {
-        var date = value ? new Date(value) : new Date();
-        this.inputs[index].calendar.setDate(date);
+      if (this.inputs[index].calendar && value) {
+        this.inputs[index].calendar.setDate(new Date(value));
       }
     }
   }, {

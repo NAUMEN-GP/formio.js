@@ -117,10 +117,11 @@ export class DateTimeComponent extends BaseComponent {
   getDate(value) {
     let timestamp = parseInt(value, 10);
     if (!timestamp) {
-      // Just default to today.
-      return (new Date());
+      return null;
+    }else{
+      return (new Date(timestamp * 1000));
     }
-    return (new Date(timestamp * 1000));
+
   }
 
   getRawValue() {
@@ -135,13 +136,17 @@ export class DateTimeComponent extends BaseComponent {
   }
 
   getValueAt(index) {
-    return this.getDate(this.inputs[index].value).toISOString();
+    var date = this.getDate(this.inputs[index].value);
+    if(date){
+        return date.toISOString();
+    }else{
+        return null;
+    }
   }
 
   setValueAt(index, value) {
-    if (this.inputs[index].calendar) {
-      let date = value ? new Date(value) : new Date();
-      this.inputs[index].calendar.setDate(date);
+    if (this.inputs[index].calendar && value) {
+      this.inputs[index].calendar.setDate((new Date(value)));
     }
   }
 }
