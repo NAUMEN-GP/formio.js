@@ -3221,6 +3221,7 @@ var ButtonComponent = exports.ButtonComponent = function (_BaseComponent) {
       if (this.component.customClass) {
         info.attr.class += ' ' + this.component.customClass;
       }
+      info.attr.style = this.customStyle;
       return info;
     }
   }, {
@@ -8739,10 +8740,11 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
         return;
       }
       var message = '<p>' + this.t('error') + '</p><ul>';
+      var me = this;
       (0, _each3.default)(errors, function (err) {
         if (err) {
           var errorMessage = err.message || err;
-          message += '<li><strong>' + errorMessage + '</strong></li>';
+          message += '<li><strong>' + me.t(errorMessage) + '</strong></li>';
         }
       });
       message += '</ul>';

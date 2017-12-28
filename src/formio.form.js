@@ -588,10 +588,11 @@ export class FormioForm extends FormioComponents {
       return;
     }
     let message = '<p>' + this.t('error') + '</p><ul>';
+    let me = this;
     _each(errors, (err) => {
       if (err) {
         let errorMessage = err.message || err;
-        message += '<li><strong>' + errorMessage + '</strong></li>';
+        message += '<li><strong>' + me.t(errorMessage) + '</strong></li>';
       }
     });
     message += '</ul>';

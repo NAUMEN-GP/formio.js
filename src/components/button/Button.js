@@ -14,6 +14,7 @@ export class ButtonComponent extends BaseComponent {
     if (this.component.customClass) {
       info.attr.class += ' ' + this.component.customClass;
     }
+    info.attr.style = this.customStyle;
     return info;
   }
 
