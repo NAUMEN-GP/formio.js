@@ -57,7 +57,9 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
     key: 'build',
     value: function build() {
       // Set default to empty array.
-      this.setValue([]);
+      if (!this.getValue()) {
+        this.setValue([]);
+      }
 
       this.createElement();
       this.createLabel(this.element);

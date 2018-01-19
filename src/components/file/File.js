@@ -24,7 +24,7 @@ export class FileComponent extends BaseComponent {
 
   build() {
     // Set default to empty array.
-    this.setValue([]);
+    if(!this.getValue()){this.setValue([]);}
 
     this.createElement();
     this.createLabel(this.element);
