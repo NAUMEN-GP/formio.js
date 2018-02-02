@@ -325,7 +325,7 @@ export class FileComponent extends BaseComponent {
             let exts = this.component.accept.split(",").map(ext => ext.trim().toLowerCase());
             if(exts.findIndex(ext => file.type.indexOf(ext) >= 0) < 0){
                 fileUpload.status = 'error';
-                fileUpload.message = 'Invalid file extension.';
+                fileUpload.message = 'Invalid_file_extension';
                 invalidExtension = true;
             }
         }

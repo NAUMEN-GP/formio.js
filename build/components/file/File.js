@@ -317,7 +317,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
               return file.type.indexOf(ext) >= 0;
             }) < 0) {
               fileUpload.status = 'error';
-              fileUpload.message = 'Invalid file extension.';
+              fileUpload.message = 'Invalid_file_extension';
               invalidExtension = true;
             }
           }
