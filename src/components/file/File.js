@@ -196,10 +196,11 @@ export class FileComponent extends BaseComponent {
                   event.preventDefault();
                   // There is no direct way to trigger a file dialog. To work around this, create an input of type file and trigger
                   // a click event on it.
-                  let input = this.ce('input', {
-                    type: 'file',
-                    onChange: () => {this.upload(input.files)}
-                  });
+                  let props = {type: 'file', onChange: () => {this.upload(input.files)}};
+                  if(this.component.accept){
+                      props.accept = this.component.accept
+                  }
+                  let input = this.ce('input', props);
                   // Trigger a click event on the input.
                   if (typeof input.trigger === 'function') {
                     input.trigger('click');
@@ -282,7 +283,7 @@ export class FileComponent extends BaseComponent {
                 this.ce('span', {class: 'sr-only'}, fileUpload.progress + '% Complete')
               )
             ) :
-            this.ce('div', {class: 'bg-' + fileUpload.status}, fileUpload.message)
+            this.ce('div', {class: 'bg-' + fileUpload.status}, this.t(fileUpload.message))
           )
         ])
       ])
@@ -292,7 +293,13 @@ export class FileComponent extends BaseComponent {
   upload(files) {
     // Only allow one upload if not multiple.
     if (!this.component.multiple) {
-      files = Array.prototype.slice.call(files, 0, 1);
+       files = Array.prototype.slice.call(files, 0, 1);
+    }else if(this.component.maxCount){
+      let count = this.data.files && this.data.files instanceof Array ? this.data.files.length : 0;
+      let leftCount = this.component.maxCount - count;
+      if(leftCount < files.length){
+        files = Array.prototype.slice.call(files, 0, leftCount);
+      }
     }
     if (this.component.storage && files && files.length) {
       // files is not really an array and does not have a forEach method, so fake it.
@@ -300,7 +307,7 @@ export class FileComponent extends BaseComponent {
         // Get a unique name for this file to keep file collisions from occurring.
         const fileName = FormioUtils.uniqueName(file.name);
         let fileUpload = {
-          name: fileName,
+          name: file.name,
           size: file.size,
           status: 'info',
           message: 'Starting upload'
@@ -312,8 +319,23 @@ export class FileComponent extends BaseComponent {
           fileUpload.message = 'File Service not provided.';
         }
 
+        let invalidExtension = false;
+
+        if(this.component.accept){
+            let exts = this.component.accept.split(",").map(ext => ext.trim().toLowerCase());
+            if(exts.findIndex(ext => file.type.indexOf(ext) >= 0) < 0){
+                fileUpload.status = 'error';
+                fileUpload.message = 'Invalid file extension.';
+                invalidExtension = true;
+            }
+        }
+
         let uploadStatus = this.createUploadStatus(fileUpload);
         this.uploadStatusList.appendChild(uploadStatus);
+
+        if(invalidExtension){
+            return;
+        }
 
         if (fileService) {
           fileService.uploadFile(this.component.storage, file, fileName, dir, evt => {
