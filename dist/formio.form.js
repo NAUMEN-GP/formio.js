@@ -5282,7 +5282,9 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       } else if (this.component.maxCount) {
         var count = this.data.files && this.data.files instanceof Array ? this.data.files.length : 0;
         var leftCount = this.component.maxCount - count;
-        if (leftCount < files.length) {
+        if (leftCount <= 0) {
+          files = [];
+        } else if (leftCount < files.length) {
           files = Array.prototype.slice.call(files, 0, leftCount);
         }
       }
