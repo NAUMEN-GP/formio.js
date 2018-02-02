@@ -5182,12 +5182,13 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
           event.preventDefault();
           // There is no direct way to trigger a file dialog. To work around this, create an input of type file and trigger
           // a click event on it.
-          var input = _this6.ce('input', {
-            type: 'file',
-            onChange: function onChange() {
+          var props = { type: 'file', onChange: function onChange() {
               _this6.upload(input.files);
-            }
-          });
+            } };
+          if (_this6.component.accept) {
+            props.accept = _this6.component.accept;
+          }
+          var input = _this6.ce('input', props);
           // Trigger a click event on the input.
           if (typeof input.trigger === 'function') {
             input.trigger('click');
@@ -5256,7 +5257,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
         'aria-valuemin': 0,
         'aria-valuemax': 100,
         style: 'width:' + fileUpload.progress + '%'
-      }, this.ce('span', { class: 'sr-only' }, fileUpload.progress + '% Complete'))) : this.ce('div', { class: 'bg-' + fileUpload.status }, fileUpload.message)])])]);
+      }, this.ce('span', { class: 'sr-only' }, fileUpload.progress + '% Complete'))) : this.ce('div', { class: 'bg-' + fileUpload.status }, this.t(fileUpload.message))])])]);
     }
   }, {
     key: 'upload',
@@ -5266,6 +5267,12 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       // Only allow one upload if not multiple.
       if (!this.component.multiple) {
         files = Array.prototype.slice.call(files, 0, 1);
+      } else if (this.component.maxCount) {
+        var count = this.data.files && this.data.files instanceof Array ? this.data.files.length : 0;
+        var leftCount = this.component.maxCount - count;
+        if (leftCount < files.length) {
+          files = Array.prototype.slice.call(files, 0, leftCount);
+        }
       }
       if (this.component.storage && files && files.length) {
         // files is not really an array and does not have a forEach method, so fake it.
@@ -5273,7 +5280,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
           // Get a unique name for this file to keep file collisions from occurring.
           var fileName = _utils2.default.uniqueName(file.name);
           var fileUpload = {
-            name: fileName,
+            name: file.name,
             size: file.size,
             status: 'info',
             message: 'Starting upload'
@@ -5285,8 +5292,27 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
             fileUpload.message = 'File Service not provided.';
           }
 
+          var invalidExtension = false;
+
+          if (_this8.component.accept) {
+            var exts = _this8.component.accept.split(",").map(function (ext) {
+              return ext.trim().toLowerCase();
+            });
+            if (exts.findIndex(function (ext) {
+              return file.type.indexOf(ext) >= 0;
+            }) < 0) {
+              fileUpload.status = 'error';
+              fileUpload.message = 'Invalid file extension.';
+              invalidExtension = true;
+            }
+          }
+
           var uploadStatus = _this8.createUploadStatus(fileUpload);
           _this8.uploadStatusList.appendChild(uploadStatus);
+
+          if (invalidExtension) {
+            return;
+          }
 
           if (fileService) {
             fileService.uploadFile(_this8.component.storage, file, fileName, dir, function (evt) {
