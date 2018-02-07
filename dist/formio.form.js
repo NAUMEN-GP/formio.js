@@ -5282,15 +5282,21 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       } else if (this.component.maxCount) {
         var count = this.data.files && this.data.files instanceof Array ? this.data.files.length : 0;
         var leftCount = this.component.maxCount - count;
+        console.log("Files count: " + count);
+        console.log("Left count: " + leftCount);
         if (leftCount <= 0) {
           files = [];
         } else if (leftCount < files.length) {
           files = Array.prototype.slice.call(files, 0, leftCount);
         }
       }
+      console.log(files);
       if (this.component.storage && files && files.length) {
         // files is not really an array and does not have a forEach method, so fake it.
         Array.prototype.forEach.call(files, function (file) {
+          console.log(file);
+          console.log(console.log("FileName: " + file.name));
+          console.log(console.log("FileType: " + file.type));
           // Get a unique name for this file to keep file collisions from occurring.
           var fileName = _utils2.default.uniqueName(file.name);
           var fileUpload = {
@@ -5314,6 +5320,8 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
               var mime = this.extToMime[tExt];
               return mime ? mime : tExt;
             }, _this8);
+            console.log("Exts: ", exts);
+
             if (exts.findIndex(function (ext) {
               return file.type.indexOf(ext) >= 0;
             }) < 0) {
