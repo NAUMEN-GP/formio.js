@@ -5282,21 +5282,15 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       } else if (this.component.maxCount) {
         var count = this.data.files && this.data.files instanceof Array ? this.data.files.length : 0;
         var leftCount = this.component.maxCount - count;
-        console.log("Files count: " + count);
-        console.log("Left count: " + leftCount);
         if (leftCount <= 0) {
           files = [];
         } else if (leftCount < files.length) {
           files = Array.prototype.slice.call(files, 0, leftCount);
         }
       }
-      console.log(files);
       if (this.component.storage && files && files.length) {
         // files is not really an array and does not have a forEach method, so fake it.
         Array.prototype.forEach.call(files, function (file) {
-          console.log(file);
-          console.log(console.log("FileName: " + file.name));
-          console.log(console.log("FileType: " + file.type));
           // Get a unique name for this file to keep file collisions from occurring.
           var fileName = _utils2.default.uniqueName(file.name);
           var fileUpload = {
@@ -5315,20 +5309,31 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
           var invalidExtension = false;
 
           if (_this8.component.accept) {
-            var exts = _this8.component.accept.split(",").map(function (ext) {
-              var tExt = ext.trim().toLowerCase();
-              var mime = this.extToMime[tExt];
-              return mime ? mime : tExt;
+            var acceptExts = _this8.component.accept.split(",").map(function (ext) {
+              return ext.trim().toLowerCase();
+            });
+            var acceptTypes = acceptExts.map(function (ext) {
+              var mime = this.extToMime[ext];
+              return mime ? mime : ext;
             }, _this8);
-            console.log("Exts: ", exts);
 
-            if (exts.findIndex(function (ext) {
-              return file.type.indexOf(ext) >= 0;
-            }) < 0) {
-              fileUpload.status = 'error';
-              fileUpload.message = 'Invalid_file_extension';
-              invalidExtension = true;
+            if (file.type) {
+              if (acceptTypes.findIndex(function (ext) {
+                return file.type.indexOf(ext) >= 0;
+              }) < 0) {
+                invalidExtension = true;
+              }
+            } else {
+              var fileExt = file.name.substr(file.name.lastIndexOf('.') + 1).toLowerCase();
+              if (acceptExts.indexOf(fileExt) < 0) {
+                invalidExtension = true;
+              }
             }
+          }
+
+          if (invalidExtension) {
+            fileUpload.status = 'error';
+            fileUpload.message = 'Invalid_file_extension';
           }
 
           var uploadStatus = _this8.createUploadStatus(fileUpload);
