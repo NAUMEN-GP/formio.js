@@ -10321,7 +10321,8 @@ module.exports = global.Formio = Formio;
 'use strict';
 
 module.exports = {
-  nsSeparator: '::',
+  nsSeparator: ':::',
+  keySeparator: '::',
   lng: 'en',
   resources: {
     en: {

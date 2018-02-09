@@ -1,5 +1,6 @@
 module.exports = {
-  nsSeparator: '::',
+  nsSeparator: ':::',
+  keySeparator: '::',
   lng: 'en',
   resources: {
     en: {
