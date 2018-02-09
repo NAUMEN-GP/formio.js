@@ -2247,6 +2247,7 @@ var BaseComponent = function () {
     value: function redraw() {
       this.clear();
       this.build();
+      this.setSubmission(this.submission);
     }
 
     /**

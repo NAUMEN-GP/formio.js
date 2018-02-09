@@ -809,6 +809,7 @@ export class BaseComponent {
   redraw() {
     this.clear();
     this.build();
+    this.setSubmission(this.submission);
   }
 
   /**
