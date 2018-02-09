@@ -1,4 +1,5 @@
 module.exports = {
+  nsSeparator: '::',
   lng: 'en',
   resources: {
     en: {

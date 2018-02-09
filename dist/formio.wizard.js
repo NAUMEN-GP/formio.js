@@ -10751,6 +10751,7 @@ module.exports = global.FormioWizard = FormioWizard;
 'use strict';
 
 module.exports = {
+  nsSeparator: '::',
   lng: 'en',
   resources: {
     en: {

@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = {
+  nsSeparator: '::',
   lng: 'en',
   resources: {
     en: {
