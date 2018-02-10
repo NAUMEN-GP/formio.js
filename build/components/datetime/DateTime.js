@@ -194,7 +194,7 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
         hourIncrement: (0, _get4.default)(this.component, 'timePicker.hourStep', 1),
         minuteIncrement: (0, _get4.default)(this.component, 'timePicker.minuteStep', 5),
         time_24hr: !(0, _get4.default)(this.component, 'timePicker.showMeridian', false),
-        locale: _ru2.default,
+        locale: _ru2.default.ru,
         onChange: function onChange() {
           return _this2.onChange();
         }

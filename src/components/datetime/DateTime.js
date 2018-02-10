@@ -92,7 +92,7 @@ export class DateTimeComponent extends BaseComponent {
       hourIncrement: _get(this.component, 'timePicker.hourStep', 1),
       minuteIncrement: _get(this.component, 'timePicker.minuteStep', 5),
       time_24hr: !_get(this.component, 'timePicker.showMeridian', false) ,
-      locale: Russian,
+      locale: Russian.ru,
       onChange: () => this.onChange()
     };
   }
