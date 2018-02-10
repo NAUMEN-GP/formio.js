@@ -2,7 +2,11 @@ import { BaseComponent } from '../base/Base';
 import Flatpickr from 'flatpickr';
 import _get from 'lodash/get';
 import _each from 'lodash/each';
+
+import Russian from "flatpickr/dist/l10n/ru";
+
 const momentModule = require('moment');
+
 export class DateTimeComponent extends BaseComponent {
   constructor(component, options, data) {
     super(component, options, data);
@@ -87,6 +91,8 @@ export class DateTimeComponent extends BaseComponent {
       defaultDate: _get(this.component, 'defaultDate', ''),
       hourIncrement: _get(this.component, 'timePicker.hourStep', 1),
       minuteIncrement: _get(this.component, 'timePicker.minuteStep', 5),
+      time_24hr: !_get(this.component, 'timePicker.showMeridian', false) ,
+      locale: Russian,
       onChange: () => this.onChange()
     };
   }

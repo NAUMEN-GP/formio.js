@@ -25,6 +25,10 @@ var _each2 = require('lodash/each');
 
 var _each3 = _interopRequireDefault(_each2);
 
+var _ru = require('flatpickr/dist/l10n/ru');
+
+var _ru2 = _interopRequireDefault(_ru);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -189,6 +193,8 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
         defaultDate: (0, _get4.default)(this.component, 'defaultDate', ''),
         hourIncrement: (0, _get4.default)(this.component, 'timePicker.hourStep', 1),
         minuteIncrement: (0, _get4.default)(this.component, 'timePicker.minuteStep', 5),
+        time_24hr: !(0, _get4.default)(this.component, 'timePicker.showMeridian', false),
+        locale: _ru2.default,
         onChange: function onChange() {
           return _this2.onChange();
         }
