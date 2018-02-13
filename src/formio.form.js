@@ -463,8 +463,9 @@ export class FormioForm extends FormioComponents {
   setSubmission(submission) {
     return this.onSubmission = this.formReady.then(
       () => {
+        let virginSubmission = Object.assign({}, submission);
         this.setValue(submission);
-        this.submissionReadyResolve();
+        this.submissionReadyResolve(virginSubmission);
       },
       (err) => this.submissionReadyReject(err)
     ).catch(

@@ -8632,8 +8632,9 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
       var _this5 = this;
 
       return this.onSubmission = this.formReady.then(function () {
+        var virginSubmission = Object.assign({}, submission);
         _this5.setValue(submission);
-        _this5.submissionReadyResolve();
+        _this5.submissionReadyResolve(virginSubmission);
       }, function (err) {
         return _this5.submissionReadyReject(err);
       }).catch(function (err) {
