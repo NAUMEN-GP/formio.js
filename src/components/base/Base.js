@@ -1177,7 +1177,7 @@ export class BaseComponent {
 
   checkValidity(data, dirty) {
     // No need to check for errors if there is no input or if it is pristine.
-    if (!this.component.input || (!dirty && this.pristine)) {
+    if (this.options.validationDisable || !this.component.input || (!dirty && this.pristine)) {
       return true;
     }
 

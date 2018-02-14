@@ -2649,7 +2649,7 @@ var BaseComponent = function () {
     key: 'checkValidity',
     value: function checkValidity(data, dirty) {
       // No need to check for errors if there is no input or if it is pristine.
-      if (!this.component.input || !dirty && this.pristine) {
+      if (this.options.validationDisable || !this.component.input || !dirty && this.pristine) {
         return true;
       }
 
@@ -5287,7 +5287,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       if (!this.component.multiple) {
         files = Array.prototype.slice.call(files, 0, 1);
       } else if (this.component.maxCount) {
-        var count = this.data.files && this.data.files instanceof Array ? this.data.files.length : 0;
+        var count = this.getValue() && this.getValue() instanceof Array ? this.getValue().length : 0;
         var leftCount = this.component.maxCount - count;
         if (leftCount <= 0) {
           files = [];

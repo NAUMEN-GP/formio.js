@@ -308,7 +308,7 @@ export class FileComponent extends BaseComponent {
     if (!this.component.multiple) {
        files = Array.prototype.slice.call(files, 0, 1);
     }else if(this.component.maxCount){
-      let count = this.data.files && this.data.files instanceof Array ? this.data.files.length : 0;
+      let count = this.getValue() && this.getValue() instanceof Array ? this.getValue().length : 0;
       let leftCount = this.component.maxCount - count;
       if(leftCount <= 0){
         files = [];
