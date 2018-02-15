@@ -115,7 +115,7 @@ var SelectComponent = exports.SelectComponent = function (_BaseComponent) {
 
       // If a value is provided, then select it.
       if (this.value) {
-        this.setValue(this.value, true);
+        this.setValue(this.value);
       }
     }
   }, {
