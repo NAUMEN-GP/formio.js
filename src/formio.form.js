@@ -588,15 +588,19 @@ export class FormioForm extends FormioComponents {
       this.setAlert(false);
       return;
     }
-    let message = '<p>' + this.t('error') + '</p><ul>';
-    let me = this;
-    _each(errors, (err) => {
-      if (err) {
-        let errorMessage = err.message || err;
-        message += '<li><strong>' + me.t(errorMessage) + '</strong></li>';
-      }
-    });
-    message += '</ul>';
+    let message = '<p>' + this.t('error') + '</p>';
+    if(!this.options.errorTitleOnly){
+        message += '<ul>';
+        let me = this;
+        _each(errors, (err) => {
+            if (err) {
+                let errorMessage = err.message || err;
+                message += '<li><strong>' + me.t(errorMessage) + '</strong></li>';
+            }
+        });
+        message += '</ul>';
+    }
+
     this.setAlert('danger', message);
     this.emit('error', errors);
     return errors;

@@ -8804,15 +8804,19 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
         this.setAlert(false);
         return;
       }
-      var message = '<p>' + this.t('error') + '</p><ul>';
-      var me = this;
-      (0, _each3.default)(errors, function (err) {
-        if (err) {
-          var errorMessage = err.message || err;
-          message += '<li><strong>' + me.t(errorMessage) + '</strong></li>';
-        }
-      });
-      message += '</ul>';
+      var message = '<p>' + this.t('error') + '</p>';
+      if (!this.options.errorTitleOnly) {
+        message += '<ul>';
+        var me = this;
+        (0, _each3.default)(errors, function (err) {
+          if (err) {
+            var errorMessage = err.message || err;
+            message += '<li><strong>' + me.t(errorMessage) + '</strong></li>';
+          }
+        });
+        message += '</ul>';
+      }
+
       this.setAlert('danger', message);
       this.emit('error', errors);
       return errors;
