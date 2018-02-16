@@ -41,6 +41,9 @@ export class TextAreaComponent extends TextFieldComponent {
     });
     container.appendChild(this.input);
 
+    this.errorContainer = this.ce('div', {style: 'padding-top: 20px;'});
+    container.appendChild(this.errorContainer);
+
     var settings = this.component.wysiwyg;
 
     if (this.options.readOnly || this.component.disabled) {
