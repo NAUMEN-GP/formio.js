@@ -7826,7 +7826,10 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
     value: function createInput(container) {
       var t = this;
       if (!this.component.wysiwyg) {
-        return _get(TextAreaComponent.prototype.__proto__ || Object.getPrototypeOf(TextAreaComponent.prototype), 'createInput', this).call(this, container);
+        var inp = _get(TextAreaComponent.prototype.__proto__ || Object.getPrototypeOf(TextAreaComponent.prototype), 'createInput', this).call(this, container);
+        this.errorContainer = this.ce('div', { style: 'padding-top: 18px;' });
+        container.appendChild(this.errorContainer);
+        return inp;
       }
 
       if (typeof this.component.wysiwyg === 'boolean') {
@@ -7839,7 +7842,7 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
       });
       container.appendChild(this.input);
 
-      this.errorContainer = this.ce('div', { style: 'padding-top: 20px;' });
+      this.errorContainer = this.ce('div', { style: 'padding-top: 18px;' });
       container.appendChild(this.errorContainer);
 
       var settings = this.component.wysiwyg;
