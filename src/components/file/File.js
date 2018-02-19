@@ -14,6 +14,7 @@ export class FileComponent extends BaseComponent {
     };
     this.extToMime = {
         txt:  "text/plain",
+        jpg:  "image/jpeg",
         doc:  "application/msword",
         docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         ppt:  "application/vnd.ms-powerpoint",
