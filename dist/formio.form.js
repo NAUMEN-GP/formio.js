@@ -6878,7 +6878,8 @@ var SelectComponent = exports.SelectComponent = function (_BaseComponent) {
   }, {
     key: 'itemTemplate',
     value: function itemTemplate(data) {
-      return this.component.template ? this.interpolate(this.component.template, { item: data }) : data.label;
+      var text = this.component.template ? this.interpolate(this.component.template, { item: data }) : data.label;
+      return this.t(text);
     }
   }, {
     key: 'itemValue',

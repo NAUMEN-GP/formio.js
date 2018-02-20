@@ -34,7 +34,8 @@ export class SelectComponent extends BaseComponent {
   }
 
   itemTemplate(data) {
-    return this.component.template ? this.interpolate(this.component.template, {item: data}) : data.label;
+    let text = this.component.template ? this.interpolate(this.component.template, {item: data}) : data.label;
+    return this.t(text);
   }
 
   itemValue(data) {
