@@ -1780,10 +1780,10 @@ var BaseComponent = function () {
     value: function build() {
       this.createElement();
       this.createLabel(this.element);
+      this.createDescription(this.element);
       if (!this.createWrapper()) {
         this.createInput(this.element);
       }
-      this.createDescription(this.element);
 
       // Disable if needed.
       if (this.options.readOnly || this.component.disabled) {
@@ -3415,10 +3415,10 @@ var CheckBoxComponent = exports.CheckBoxComponent = function (_BaseComponent) {
       this.createElement();
       this.input = this.createInput(this.element);
       this.createLabel(this.element, this.input);
+      this.createDescription(this.element);
       if (!this.labelElement) {
         this.addInput(this.input, this.element);
       }
-      this.createDescription(this.element);
       if (this.options.readOnly || this.component.disabled) {
         this.disabled = true;
       }
@@ -4004,12 +4004,12 @@ var DataGridComponent = exports.DataGridComponent = function (_FormioComponents)
     value: function build() {
       this.createElement();
       this.createLabel(this.element);
+      this.createDescription(this.element);
       if (!this.data.hasOwnProperty(this.component.key)) {
         this.addNewValue();
       }
       this.visibleColumns = true;
       this.buildTable();
-      this.createDescription(this.element);
     }
   }, {
     key: 'buildTable',
@@ -5068,6 +5068,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
 
       this.createElement();
       this.createLabel(this.element);
+      this.createDescription(this.element);
       this.errorContainer = this.element;
       this.createErrorElement();
       this.listContainer = this.buildList();
@@ -5076,7 +5077,6 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       this.element.appendChild(this.uploadContainer);
       this.addWarnings(this.element);
       this.buildUploadStatusList(this.element);
-      this.createDescription(this.element);
     }
   }, {
     key: 'refreshDOM',
@@ -7546,6 +7546,7 @@ var SurveyComponent = exports.SurveyComponent = function (_BaseComponent) {
 
       this.createElement();
       this.createLabel(this.element);
+      this.createDescription(this.element);
       this.table = this.ce('table', {
         class: 'table table-striped table-bordered'
       });
@@ -7587,7 +7588,7 @@ var SurveyComponent = exports.SurveyComponent = function (_BaseComponent) {
       });
       this.table.appendChild(tbody);
       this.element.appendChild(this.table);
-      this.createDescription(this.element);
+
       if (this.options.readOnly || this.component.disabled) {
         this.disabled = true;
       }

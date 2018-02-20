@@ -76,6 +76,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
 
       this.createElement();
       this.createLabel(this.element);
+      this.createDescription(this.element);
       this.errorContainer = this.element;
       this.createErrorElement();
       this.listContainer = this.buildList();
@@ -84,7 +85,6 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       this.element.appendChild(this.uploadContainer);
       this.addWarnings(this.element);
       this.buildUploadStatusList(this.element);
-      this.createDescription(this.element);
     }
   }, {
     key: 'refreshDOM',

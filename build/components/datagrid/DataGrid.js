@@ -52,12 +52,12 @@ var DataGridComponent = exports.DataGridComponent = function (_FormioComponents)
     value: function build() {
       this.createElement();
       this.createLabel(this.element);
+      this.createDescription(this.element);
       if (!this.data.hasOwnProperty(this.component.key)) {
         this.addNewValue();
       }
       this.visibleColumns = true;
       this.buildTable();
-      this.createDescription(this.element);
     }
   }, {
     key: 'buildTable',

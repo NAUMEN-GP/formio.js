@@ -12,12 +12,12 @@ export class DataGridComponent extends FormioComponents {
   build() {
     this.createElement();
     this.createLabel(this.element);
+    this.createDescription(this.element);
     if (!this.data.hasOwnProperty(this.component.key)) {
       this.addNewValue();
     }
     this.visibleColumns = true;
     this.buildTable();
-    this.createDescription(this.element);
   }
 
   buildTable(data) {

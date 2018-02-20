@@ -37,6 +37,7 @@ var SurveyComponent = exports.SurveyComponent = function (_BaseComponent) {
 
       this.createElement();
       this.createLabel(this.element);
+      this.createDescription(this.element);
       this.table = this.ce('table', {
         class: 'table table-striped table-bordered'
       });
@@ -78,7 +79,7 @@ var SurveyComponent = exports.SurveyComponent = function (_BaseComponent) {
       });
       this.table.appendChild(tbody);
       this.element.appendChild(this.table);
-      this.createDescription(this.element);
+
       if (this.options.readOnly || this.component.disabled) {
         this.disabled = true;
       }

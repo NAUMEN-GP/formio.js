@@ -328,10 +328,10 @@ export class BaseComponent {
   build() {
     this.createElement();
     this.createLabel(this.element);
+    this.createDescription(this.element);
     if (!this.createWrapper()) {
       this.createInput(this.element);
     }
-    this.createDescription(this.element);
 
     // Disable if needed.
     if (this.options.readOnly || this.component.disabled) {

@@ -49,10 +49,10 @@ var CheckBoxComponent = exports.CheckBoxComponent = function (_BaseComponent) {
       this.createElement();
       this.input = this.createInput(this.element);
       this.createLabel(this.element, this.input);
+      this.createDescription(this.element);
       if (!this.labelElement) {
         this.addInput(this.input, this.element);
       }
-      this.createDescription(this.element);
       if (this.options.readOnly || this.component.disabled) {
         this.disabled = true;
       }
