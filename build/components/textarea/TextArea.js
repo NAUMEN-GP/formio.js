@@ -46,8 +46,6 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
       var t = this;
       if (!this.component.wysiwyg) {
         var inp = _get(TextAreaComponent.prototype.__proto__ || Object.getPrototypeOf(TextAreaComponent.prototype), 'createInput', this).call(this, container);
-        this.errorContainer = this.ce('div', { style: 'padding-top: 18px;' });
-        container.appendChild(this.errorContainer);
         return inp;
       }
 
@@ -61,7 +59,7 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
       });
       container.appendChild(this.input);
 
-      this.errorContainer = this.ce('div', { style: 'padding-top: 18px;' });
+      this.errorContainer = this.ce('div', { class: 'error-container' });
       container.appendChild(this.errorContainer);
 
       var settings = this.component.wysiwyg;

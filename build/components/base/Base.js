@@ -395,6 +395,7 @@ var BaseComponent = function () {
       this.createDescription(this.element);
       if (!this.createWrapper()) {
         this.createInput(this.element);
+        this.createHint(this.element);
       }
 
       // Disable if needed.
@@ -669,6 +670,9 @@ var BaseComponent = function () {
       this.description.appendChild(this.text(this.component.description));
       container.appendChild(this.description);
     }
+  }, {
+    key: 'createHint',
+    value: function createHint(container) {}
 
     /**
      * Creates a new error element to hold the errors of this element.
@@ -832,7 +836,8 @@ var BaseComponent = function () {
       this.addPrefix(input, inputGroup);
       this.addInput(input, inputGroup || container);
       this.addSuffix(input, inputGroup);
-      this.errorContainer = container;
+      this.errorContainer = this.ce('div', { class: 'error-container' });
+      container.appendChild(this.errorContainer);
       return inputGroup || input;
     }
 
@@ -1488,6 +1493,29 @@ var BaseComponent = function () {
         changeEvent: 'change',
         attr: attributes
       };
+    }
+  }, {
+    key: 'decOfNum',
+    value: function decOfNum(count, titles) {
+      var a = count % 100;
+      var b = count % 10;
+      if (a > 10 && a < 20) return titles[2];
+      if (b > 1 && b < 5) return titles[1];
+      if (b === 1) return titles[0];
+      return titles[2];
+    }
+  }, {
+    key: 'htmlToPlainText',
+    value: function htmlToPlainText(html) {
+      var el = document.createElement('div');
+      el.innerHTML = html;
+      var array = [];
+      var elements = el.children;
+      for (var i = 0; i < elements.length; i++) {
+        array.push(elements[i].textContent);
+      }
+      el.remove();
+      return array.join('').replace(/\s/g, '');
     }
   }, {
     key: 'language',

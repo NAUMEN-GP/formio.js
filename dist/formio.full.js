@@ -644,7 +644,11 @@ var Validator = exports.Validator = {
         if (!maxLength || typeof value !== 'string') {
           return true;
         }
-        return value.length <= maxLength;
+        if (component.type === 'textarea' && component.component.wysiwyg) {
+          return component.htmlToPlainText(value).length <= maxLength;
+        } else {
+          return value.length <= maxLength;
+        }
       }
     },
     email: {
@@ -1783,6 +1787,7 @@ var BaseComponent = function () {
       this.createDescription(this.element);
       if (!this.createWrapper()) {
         this.createInput(this.element);
+        this.createHint(this.element);
       }
 
       // Disable if needed.
@@ -2054,6 +2059,9 @@ var BaseComponent = function () {
       this.description.appendChild(this.text(this.component.description));
       container.appendChild(this.description);
     }
+  }, {
+    key: 'createHint',
+    value: function createHint(container) {}
 
     /**
      * Creates a new error element to hold the errors of this element.
@@ -2217,7 +2225,8 @@ var BaseComponent = function () {
       this.addPrefix(input, inputGroup);
       this.addInput(input, inputGroup || container);
       this.addSuffix(input, inputGroup);
-      this.errorContainer = container;
+      this.errorContainer = this.ce('div', { class: 'error-container' });
+      container.appendChild(this.errorContainer);
       return inputGroup || input;
     }
 
@@ -2872,6 +2881,29 @@ var BaseComponent = function () {
         changeEvent: 'change',
         attr: attributes
       };
+    }
+  }, {
+    key: 'decOfNum',
+    value: function decOfNum(count, titles) {
+      var a = count % 100;
+      var b = count % 10;
+      if (a > 10 && a < 20) return titles[2];
+      if (b > 1 && b < 5) return titles[1];
+      if (b === 1) return titles[0];
+      return titles[2];
+    }
+  }, {
+    key: 'htmlToPlainText',
+    value: function htmlToPlainText(html) {
+      var el = document.createElement('div');
+      el.innerHTML = html;
+      var array = [];
+      var elements = el.children;
+      for (var i = 0; i < elements.length; i++) {
+        array.push(elements[i].textContent);
+      }
+      el.remove();
+      return array.join('').replace(/\s/g, '');
     }
   }, {
     key: 'language',
@@ -7830,8 +7862,6 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
       var t = this;
       if (!this.component.wysiwyg) {
         var inp = _get(TextAreaComponent.prototype.__proto__ || Object.getPrototypeOf(TextAreaComponent.prototype), 'createInput', this).call(this, container);
-        this.errorContainer = this.ce('div', { style: 'padding-top: 18px;' });
-        container.appendChild(this.errorContainer);
         return inp;
       }
 
@@ -7845,7 +7875,7 @@ var TextAreaComponent = exports.TextAreaComponent = function (_TextFieldComponen
       });
       container.appendChild(this.input);
 
-      this.errorContainer = this.ce('div', { style: 'padding-top: 18px;' });
+      this.errorContainer = this.ce('div', { class: 'error-container' });
       container.appendChild(this.errorContainer);
 
       var settings = this.component.wysiwyg;
@@ -7978,6 +8008,61 @@ var TextFieldComponent = exports.TextFieldComponent = function (_BaseComponent) 
       info.attr.type = 'text';
       info.changeEvent = 'input';
       return info;
+    }
+  }, {
+    key: 'createHint',
+    value: function createHint(container) {
+      if (!(this.component.validate && this.component.validate.maxLength)) {
+        return;
+      }
+
+      var leftCharsHint = this.ce('div', { class: 'edit-hint' });
+      var beforeWord = this.ce('span', { class: 'before-word' });
+      leftCharsHint.appendChild(beforeWord);
+      var leftCharacters = this.ce('span', { class: 'left-characters' });
+      leftCharsHint.appendChild(leftCharacters);
+      var afterWord = this.ce('span', { class: 'after-word' });
+      leftCharsHint.appendChild(afterWord);
+
+      var limit = this.component.validate.maxLength;
+      var me = this;
+
+      var beforeWords = ['left1', 'left2', 'left3'];
+      var afterWords = ['char1', 'char2', 'char3'];
+
+      function updateCountInfo() {
+        var value = void 0;
+        if (me.component.wysiwyg) {
+          value = me.htmlToPlainText(me.getValue());
+        } else {
+          value = me.getValue();
+        }
+        var length = value ? value.length : 0;
+        var left = limit - length;
+        leftCharacters.innerHTML = left.toString();
+        beforeWord.innerHTML = me.t(me.decOfNum(Math.abs(left), beforeWords)) + '&nbsp;';
+        afterWord.innerHTML = '&nbsp;' + me.t(me.decOfNum(Math.abs(left), afterWords));
+
+        var containsColorRed = leftCharacters.classList.contains('color-red');
+        if (length > limit) {
+          if (!containsColorRed) {
+            me.addClass(leftCharacters, 'color-red');
+          }
+        } else if (containsColorRed) {
+          me.removeClass(leftCharacters, 'color-red');
+        }
+      }
+
+      /*let interval;
+      this.addEventListener(input, 'focus', function(){
+          interval = setInterval(updateCountInfo, 100);
+      });
+      this.addEventListener(input, 'blur', function(){
+          clearInterval(interval);
+      });*/
+
+      this.errorContainer.appendChild(leftCharsHint);
+      this.on('componentChange', updateCountInfo, true);
     }
   }]);
 

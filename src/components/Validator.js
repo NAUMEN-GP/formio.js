@@ -128,7 +128,11 @@ export var Validator = {
         if (!maxLength || (typeof value !== 'string')) {
           return true;
         }
-        return (value.length <= maxLength);
+        if(component.type === 'textarea' && component.component.wysiwyg){
+            return (component.htmlToPlainText(value).length <= maxLength);
+        }else{
+            return (value.length <= maxLength);
+        }
       }
     },
     email: {

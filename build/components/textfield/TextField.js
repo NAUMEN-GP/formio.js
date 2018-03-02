@@ -35,6 +35,61 @@ var TextFieldComponent = exports.TextFieldComponent = function (_BaseComponent) 
       info.changeEvent = 'input';
       return info;
     }
+  }, {
+    key: 'createHint',
+    value: function createHint(container) {
+      if (!(this.component.validate && this.component.validate.maxLength)) {
+        return;
+      }
+
+      var leftCharsHint = this.ce('div', { class: 'edit-hint' });
+      var beforeWord = this.ce('span', { class: 'before-word' });
+      leftCharsHint.appendChild(beforeWord);
+      var leftCharacters = this.ce('span', { class: 'left-characters' });
+      leftCharsHint.appendChild(leftCharacters);
+      var afterWord = this.ce('span', { class: 'after-word' });
+      leftCharsHint.appendChild(afterWord);
+
+      var limit = this.component.validate.maxLength;
+      var me = this;
+
+      var beforeWords = ['left1', 'left2', 'left3'];
+      var afterWords = ['char1', 'char2', 'char3'];
+
+      function updateCountInfo() {
+        var value = void 0;
+        if (me.component.wysiwyg) {
+          value = me.htmlToPlainText(me.getValue());
+        } else {
+          value = me.getValue();
+        }
+        var length = value ? value.length : 0;
+        var left = limit - length;
+        leftCharacters.innerHTML = left.toString();
+        beforeWord.innerHTML = me.t(me.decOfNum(Math.abs(left), beforeWords)) + '&nbsp;';
+        afterWord.innerHTML = '&nbsp;' + me.t(me.decOfNum(Math.abs(left), afterWords));
+
+        var containsColorRed = leftCharacters.classList.contains('color-red');
+        if (length > limit) {
+          if (!containsColorRed) {
+            me.addClass(leftCharacters, 'color-red');
+          }
+        } else if (containsColorRed) {
+          me.removeClass(leftCharacters, 'color-red');
+        }
+      }
+
+      /*let interval;
+      this.addEventListener(input, 'focus', function(){
+          interval = setInterval(updateCountInfo, 100);
+      });
+      this.addEventListener(input, 'blur', function(){
+          clearInterval(interval);
+      });*/
+
+      this.errorContainer.appendChild(leftCharsHint);
+      this.on('componentChange', updateCountInfo, true);
+    }
   }]);
 
   return TextFieldComponent;

@@ -331,6 +331,7 @@ export class BaseComponent {
     this.createDescription(this.element);
     if (!this.createWrapper()) {
       this.createInput(this.element);
+      this.createHint(this.element);
     }
 
     // Disable if needed.
@@ -645,6 +646,8 @@ export class BaseComponent {
     container.appendChild(this.description);
   }
 
+  createHint(container){}
+
   /**
    * Creates a new error element to hold the errors of this element.
    */
@@ -783,7 +786,8 @@ export class BaseComponent {
     this.addPrefix(input, inputGroup);
     this.addInput(input, inputGroup || container);
     this.addSuffix(input, inputGroup);
-    this.errorContainer = container;
+    this.errorContainer = this.ce('div', {class: 'error-container'});
+    container.appendChild(this.errorContainer);
     return inputGroup || input;
   }
 
@@ -1400,6 +1404,27 @@ export class BaseComponent {
       changeEvent: 'change',
       attr: attributes
     };
+  }
+
+  decOfNum(count, titles) {
+     let a = count % 100;
+     let b = count % 10;
+     if(a > 10 && a < 20) return titles[2];
+     if(b > 1 && b < 5) return titles[1];
+     if(b === 1) return titles[0];
+     return titles[2];
+  }
+
+  htmlToPlainText(html) {
+      let el = document.createElement('div');
+      el.innerHTML = html;
+      let array = [];
+      let elements = el.children;
+      for(let i = 0; i < elements.length; i++) {
+          array.push(elements[i].textContent);
+      }
+      el.remove();
+      return array.join('').replace(/\s/g,'');
   }
 }
 

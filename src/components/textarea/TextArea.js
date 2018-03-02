@@ -29,8 +29,6 @@ export class TextAreaComponent extends TextFieldComponent {
     var t = this;
     if (!this.component.wysiwyg) {
       var inp = super.createInput(container);
-      this.errorContainer = this.ce('div', {style: 'padding-top: 18px;'});
-      container.appendChild(this.errorContainer);
       return inp;
     }
 
@@ -44,7 +42,7 @@ export class TextAreaComponent extends TextFieldComponent {
     });
     container.appendChild(this.input);
 
-    this.errorContainer = this.ce('div', {style: 'padding-top: 18px;'});
+    this.errorContainer = this.ce('div', { class: 'error-container' });
     container.appendChild(this.errorContainer);
 
     var settings = this.component.wysiwyg;

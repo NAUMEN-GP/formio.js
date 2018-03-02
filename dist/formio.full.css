@@ -255,3 +255,23 @@ td > .form-group {
 .inline-form-button {
   margin-right: 10px;
 }
+
+.edit-hint {
+  color: #8a8a90;
+  font-size: 13px;
+  font-style: italic;
+  float: right !important;
+}
+
+.edit-hint .left-characters.color-red {
+  color: #f00;
+}
+
+.error-container {
+  overflow: hidden;
+}
+
+.formio-errors {
+  float: left;
+}
+
