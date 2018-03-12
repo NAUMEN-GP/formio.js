@@ -157,7 +157,7 @@ export class FileComponent extends BaseComponent {
     return this.ce('div', {},
       this.ce('span', {},
         [
-          image = this.ce('img', {src: '', alt: fileInfo.name, style: 'width:' + this.component.imageSize + 'px'}),
+          image = this.ce('img', {src: '', alt: fileInfo.name, style: 'width:' + this.component.imageSize + 'px', onClick: event => {this.emit('imageClick', fileInfo)}}),
           (
             !this.disabled ?
               this.ce('span', {
@@ -383,6 +383,7 @@ export class FileComponent extends BaseComponent {
               this.data[this.component.key].push(fileInfo);
               this.refreshDOM();
               this.triggerChange();
+              this.emit('fileUpload', fileInfo.data);
             })
             .catch(response => {
               fileUpload.status = 'error';

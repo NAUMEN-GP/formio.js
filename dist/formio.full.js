@@ -5192,7 +5192,9 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
           image.src = result.url;
         });
       }
-      return this.ce('div', {}, this.ce('span', {}, [image = this.ce('img', { src: '', alt: fileInfo.name, style: 'width:' + this.component.imageSize + 'px' }), !this.disabled ? this.ce('span', {
+      return this.ce('div', {}, this.ce('span', {}, [image = this.ce('img', { src: '', alt: fileInfo.name, style: 'width:' + this.component.imageSize + 'px', onClick: function onClick(event) {
+          _this5.emit('imageClick', fileInfo);
+        } }), !this.disabled ? this.ce('span', {
         class: 'glyphicon glyphicon-remove',
         onClick: function onClick(event) {
           if (_this5.component.storage === 'url') {
@@ -5396,6 +5398,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
               _this8.data[_this8.component.key].push(fileInfo);
               _this8.refreshDOM();
               _this8.triggerChange();
+              _this8.emit('fileUpload', fileInfo.data);
             }).catch(function (response) {
               fileUpload.status = 'error';
               fileUpload.message = response;
