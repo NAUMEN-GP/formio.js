@@ -16,6 +16,9 @@ export class SelectComponent extends BaseComponent {
           this.updateItems();
         }
         else if (event.changed.component.key === this.component.refreshOn) {
+          if(this.choices){
+              this.choices.removeActiveItems();
+          }
           this.updateItems();
         }
       });

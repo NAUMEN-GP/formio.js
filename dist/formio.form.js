@@ -6898,6 +6898,9 @@ var SelectComponent = exports.SelectComponent = function (_BaseComponent) {
         if (_this.component.refreshOn === 'data') {
           _this.updateItems();
         } else if (event.changed.component.key === _this.component.refreshOn) {
+          if (_this.choices) {
+            _this.choices.removeActiveItems();
+          }
           _this.updateItems();
         }
       });
