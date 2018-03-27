@@ -1514,7 +1514,15 @@ var BaseComponent = function () {
       for (var i = 0; i < elements.length; i++) {
         array.push(elements[i].textContent);
       }
-      el.remove();
+      //fix for IE
+      if (!el.remove) {
+        if (el.parentNode) {
+          el.parentNode.removeChild(el);
+        }
+      } else {
+        el.remove();
+      }
+
       return array.join('').replace(/\s/g, '');
     }
   }, {
