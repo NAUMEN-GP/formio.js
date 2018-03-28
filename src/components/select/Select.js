@@ -18,6 +18,7 @@ export class SelectComponent extends BaseComponent {
         else if (event.changed.component.key === this.component.refreshOn) {
           if(this.choices){
               this.choices.removeActiveItems();
+              this.disabled = !event.data[this.component.refreshOn];
           }
           this.updateItems();
         }
@@ -213,6 +214,9 @@ export class SelectComponent extends BaseComponent {
 
       // Now set the value.
       this.choices.setValueByChoice(_isArray(value) ? value : [value]);
+    }
+    if(this.component.refreshOn){
+       this.disabled = !this.data[this.component.refreshOn];
     }
     this.updateValue(flags);
   }

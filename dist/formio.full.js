@@ -6900,6 +6900,7 @@ var SelectComponent = exports.SelectComponent = function (_BaseComponent) {
         } else if (event.changed.component.key === _this.component.refreshOn) {
           if (_this.choices) {
             _this.choices.removeActiveItems();
+            _this.disabled = !event.data[_this.component.refreshOn];
           }
           _this.updateItems();
         }
@@ -7095,6 +7096,9 @@ var SelectComponent = exports.SelectComponent = function (_BaseComponent) {
 
         // Now set the value.
         this.choices.setValueByChoice((0, _isArray3.default)(value) ? value : [value]);
+      }
+      if (this.component.refreshOn) {
+        this.disabled = !this.data[this.component.refreshOn];
       }
       this.updateValue(flags);
     }
