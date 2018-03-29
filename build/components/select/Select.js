@@ -64,6 +64,7 @@ var SelectComponent = exports.SelectComponent = function (_BaseComponent) {
           if (_this.choices) {
             _this.choices.removeActiveItems();
             _this.disabled = !event.data[_this.component.refreshOn];
+            _this.choices.hideDropdown();
           }
           _this.updateItems();
         }

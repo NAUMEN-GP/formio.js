@@ -19,6 +19,7 @@ export class SelectComponent extends BaseComponent {
           if(this.choices){
               this.choices.removeActiveItems();
               this.disabled = !event.data[this.component.refreshOn];
+              this.choices.hideDropdown();
           }
           this.updateItems();
         }
