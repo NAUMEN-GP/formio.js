@@ -2730,9 +2730,9 @@ exports.all = function() {
 },{}],11:[function(require,module,exports){
 module.exports = function (obj) {
     if (!obj || typeof obj !== 'object') return obj;
-
+    
     var copy;
-
+    
     if (isArray(obj)) {
         var len = obj.length;
         copy = Array(len);
@@ -2743,7 +2743,7 @@ module.exports = function (obj) {
     else {
         var keys = objectKeys(obj);
         copy = {};
-
+        
         for (var i = 0, l = keys.length; i < l; i++) {
             var key = keys[i];
             copy[key] = obj[key];
