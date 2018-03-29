@@ -659,7 +659,11 @@ var Formio = function () {
       // Set up and fetch request
       var headers = header || new Headers({
         'Accept': 'application/json',
-        'Content-type': 'application/json; charset=UTF-8'
+        'Content-type': 'application/json; charset=UTF-8',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Expires': 'Sat, 01 Jan 2000 00:00:00 GMT',
+        'If-Modified-Since': '0'
       });
       var token = Formio.getToken();
       if (token && !opts.noToken) {
@@ -2726,9 +2730,9 @@ exports.all = function() {
 },{}],11:[function(require,module,exports){
 module.exports = function (obj) {
     if (!obj || typeof obj !== 'object') return obj;
-    
+
     var copy;
-    
+
     if (isArray(obj)) {
         var len = obj.length;
         copy = Array(len);
@@ -2739,7 +2743,7 @@ module.exports = function (obj) {
     else {
         var keys = objectKeys(obj);
         copy = {};
-        
+
         for (var i = 0, l = keys.length; i < l; i++) {
             var key = keys[i];
             copy[key] = obj[key];
