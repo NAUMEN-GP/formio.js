@@ -116,7 +116,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
     value: function buildFileList() {
       var _this2 = this;
 
-      return this.ce('ul', { class: 'list-group list-group-striped' }, [this.ce('li', { class: 'list-group-item list-group-header hidden-xs hidden-sm' }, this.ce('div', { class: 'row' }, [this.ce('div', { class: 'col-md-1' }), this.ce('div', { class: 'col-md-9' }, this.ce('strong', {}, 'File Name')), this.ce('div', { class: 'col-md-2' }, this.ce('strong', {}, 'Size'))])), this.data[this.component.key].map(function (fileInfo, index) {
+      return this.ce('ul', { class: 'list-group list-group-striped' }, [this.data[this.component.key].map(function (fileInfo, index) {
         return _this2.createFileListItem(fileInfo, index);
       })]);
     }
@@ -125,8 +125,8 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
     value: function createFileListItem(fileInfo, index) {
       var _this3 = this;
 
-      return this.ce('li', { class: 'list-group-item' }, this.ce('div', { class: 'row' }, [this.ce('div', { class: 'col-md-1' }, !this.disabled ? this.ce('span', {
-        class: 'glyphicon glyphicon-remove',
+      var removeIcon = !this.disabled ? this.ce('span', {
+        class: 'btn-delete ml-15 action',
         onClick: function onClick(event) {
           if (_this3.component.storage === 'url') {
             _this3.options.formio.makeRequest('', _this3.data[_this3.component.key][index].url, 'delete');
@@ -136,7 +136,9 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
           _this3.refreshDOM();
           _this3.triggerChange();
         }
-      }) : null), this.ce('div', { class: 'col-md-9' }, this.createFileLink(fileInfo.data)), this.ce('div', { class: 'col-md-2' }, this.fileSize(fileInfo.size))]));
+      }, this.ce('span', { class: 'glyphicon glyphicon-trash' })) : null;
+
+      return this.ce('li', { class: 'list-group-item' }, this.ce('div', { class: 'mt-5' }, [this.createFileLink(fileInfo.data), removeIcon]));
     }
   }, {
     key: 'createFileLink',

@@ -80,51 +80,28 @@ export class FileComponent extends BaseComponent {
 
   buildFileList() {
     return this.ce('ul', {class: 'list-group list-group-striped'}, [
-      this.ce('li', {class: 'list-group-item list-group-header hidden-xs hidden-sm'},
-        this.ce('div', {class: 'row'},
-          [
-            this.ce('div', {class: 'col-md-1'}),
-            this.ce('div', {class: 'col-md-9'},
-              this.ce('strong', {}, 'File Name')
-            ),
-            this.ce('div', {class: 'col-md-2'},
-              this.ce('strong', {}, 'Size')
-            )
-          ]
-        )
-      ),
       this.data[this.component.key].map((fileInfo, index) => this.createFileListItem(fileInfo, index))
     ]);
   }
 
   createFileListItem(fileInfo, index) {
-    return this.ce('li', {class: 'list-group-item'},
-      this.ce('div', {class: 'row'},
-        [
-          this.ce('div', {class: 'col-md-1'},
-            (
-              !this.disabled ?
-                this.ce('span', {
-                  class: 'glyphicon glyphicon-remove',
-                  onClick: event => {
-                    if (this.component.storage === 'url') {
+      var removeIcon = !this.disabled ?
+          this.ce('span', {
+              class: 'btn-delete ml-15 action',
+              onClick: event => {
+                  if (this.component.storage === 'url') {
                       this.options.formio.makeRequest('', this.data[this.component.key][index].url, 'delete');
-                    }
-                    event.preventDefault();
-                    this.data[this.component.key].splice(index, 1);
-                    this.refreshDOM();
-                    this.triggerChange();
-
                   }
-                }) :
-                null
-            )
-          ),
-          this.ce('div', {class: 'col-md-9'}, this.createFileLink(fileInfo.data)),
-          this.ce('div', {class: 'col-md-2'}, this.fileSize(fileInfo.size))
-        ]
-      )
-    )
+                  event.preventDefault();
+                  this.data[this.component.key].splice(index, 1);
+                  this.refreshDOM();
+                  this.triggerChange();
+
+              }
+          }, this.ce('span', {class: 'glyphicon glyphicon-trash'})) : null;
+
+      return this.ce('li', { class: 'list-group-item' }, this.ce('div', { class: 'mt-5' }, [this.createFileLink(fileInfo.data), removeIcon]));
+
   }
 
   createFileLink(file) {
