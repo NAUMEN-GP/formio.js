@@ -138,7 +138,8 @@ export class FileComponent extends BaseComponent {
           (
             !this.disabled ?
               this.ce('span', {
-                class: 'glyphicon glyphicon-remove',
+                class: 'glyphicon glyphicon-trash',
+                style: 'font-size: 14px; cursor: pointer; margin-left: 15px;',
                 onClick: event => {
                   if (this.component.storage === 'url') {
                     this.options.formio.makeRequest('', this.data[this.component.key][index].url, 'delete');
@@ -254,7 +255,8 @@ export class FileComponent extends BaseComponent {
           this.ce('div', {class: 'fileName control-label col-sm-10'}, [
             fileUpload.name,
             this.ce('span', {
-              class: 'glyphicon glyphicon-remove',
+              class: 'glyphicon glyphicon-trash',
+              style: 'font-size: 14px; cursor: pointer; margin-left: 15px;',
               onClick: () => {this.uploadStatusList.removeChild(container)}
             })
           ]),

@@ -173,7 +173,8 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       return this.ce('div', {}, this.ce('span', {}, [image = this.ce('img', { src: '', alt: fileInfo.name, style: 'width:' + this.component.imageSize + 'px', onClick: function onClick(event) {
           _this5.emit('imageClick', fileInfo);
         } }), !this.disabled ? this.ce('span', {
-        class: 'glyphicon glyphicon-remove',
+        class: 'glyphicon glyphicon-trash',
+        style: 'font-size: 14px; cursor: pointer; margin-left: 15px;',
         onClick: function onClick(event) {
           if (_this5.component.storage === 'url') {
             _this5.options.formio.makeRequest('', _this5.data[_this5.component.key][index].url, 'delete');
@@ -278,7 +279,8 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
 
       var container = void 0;
       return container = this.ce('div', { class: 'file' + (fileUpload.status === 'error' ? ' has-error' : '') }, [this.ce('div', { class: 'row' }, [this.ce('div', { class: 'fileName control-label col-sm-10' }, [fileUpload.name, this.ce('span', {
-        class: 'glyphicon glyphicon-remove',
+        class: 'glyphicon glyphicon-trash',
+        style: 'font-size: 14px; cursor: pointer; margin-left: 15px;',
         onClick: function onClick() {
           _this7.uploadStatusList.removeChild(container);
         }
