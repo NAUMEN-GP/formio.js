@@ -39,19 +39,18 @@ export class FileComponent extends BaseComponent {
   build() {
     // Set default to empty array.
     if(!this.getValue()){this.setValue([]);}
-
     this.createElement();
     this.createLabel(this.element);
     this.createDescription(this.element);
-    this.errorContainer = this.element;
-    this.createErrorElement();
     this.listContainer = this.buildList();
     this.element.appendChild(this.listContainer);
     this.uploadContainer = this.buildUpload();
     this.element.appendChild(this.uploadContainer);
     this.addWarnings(this.element);
     this.buildUploadStatusList(this.element);
-
+    this.errorContainer = this.ce('div', {class: 'error-container'});
+    this.element.appendChild(this.errorContainer);
+    this.createErrorElement();
   }
 
   refreshDOM() {

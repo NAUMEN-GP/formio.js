@@ -553,7 +553,7 @@ var Validator = exports.Validator = {
     (0, _each3.default)(component.validators, function (name) {
       if (_this.validators.hasOwnProperty(name)) {
         var validator = _this.validators[name];
-        if (component.validateMultiple(value)) {
+        if (name !== 'required' && component.validateMultiple(value)) {
           (0, _each3.default)(value, function (val) {
             result = _this.validate(component, validator, val, data);
             if (result) {
@@ -5105,18 +5105,18 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       if (!this.getValue()) {
         this.setValue([]);
       }
-
       this.createElement();
       this.createLabel(this.element);
       this.createDescription(this.element);
-      this.errorContainer = this.element;
-      this.createErrorElement();
       this.listContainer = this.buildList();
       this.element.appendChild(this.listContainer);
       this.uploadContainer = this.buildUpload();
       this.element.appendChild(this.uploadContainer);
       this.addWarnings(this.element);
       this.buildUploadStatusList(this.element);
+      this.errorContainer = this.ce('div', { class: 'error-container' });
+      this.element.appendChild(this.errorContainer);
+      this.createErrorElement();
     }
   }, {
     key: 'refreshDOM',

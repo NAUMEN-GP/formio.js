@@ -62,7 +62,7 @@ var Validator = exports.Validator = {
     (0, _each3.default)(component.validators, function (name) {
       if (_this.validators.hasOwnProperty(name)) {
         var validator = _this.validators[name];
-        if (component.validateMultiple(value)) {
+        if (name !== 'required' && component.validateMultiple(value)) {
           (0, _each3.default)(value, function (val) {
             result = _this.validate(component, validator, val, data);
             if (result) {
