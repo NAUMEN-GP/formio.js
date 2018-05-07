@@ -4,6 +4,7 @@ import _get from 'lodash/get';
 import _each from 'lodash/each';
 
 import Russian from "flatpickr/dist/l10n/ru";
+import _isArray from "lodash/isArray";
 
 const momentModule = require('moment');
 
@@ -127,24 +128,39 @@ export class DateTimeComponent extends BaseComponent {
     }else{
       return (new Date(timestamp * 1000));
     }
+  }
 
+  localMillisecondsToUTCMilliseconds(localMs){
+    let localOffsetMs = (new Date()).getTimezoneOffset() * 60000;
+    return localMs + localOffsetMs;
+  }
+
+  UTCMillisecondsToLocalMilliseconds(utcMs){
+    let localOffsetMs = (new Date()).getTimezoneOffset() * 60000;
+    return utcMs - localOffsetMs;
   }
 
   getRawValue() {
     let values = [];
     for (let i in this.inputs) {
       if (!this.component.multiple) {
-        return this.getDate(this.inputs[i].value);
+        let secondsValue = this.inputs[i].value;
+        return this.localMillisecondsToUTCMilliseconds(secondsValue * 1000);
       }
-      values.push(this.getDate(this.inputs[i].value));
+      let secondsValue = this.inputs[i].value;
+      values.push(this.localMillisecondsToUTCMilliseconds(secondsValue * 1000));
     }
     return values;
   }
 
   getValueAt(index) {
-    var date = this.getDate(this.inputs[index].value);
-    if(date){
-        return date.toISOString();
+    var secondsValue = this.inputs[index].value;
+    if(secondsValue){
+      if(this.disabled) {
+          return secondsValue * 1000;
+      } else {
+          return this.localMillisecondsToUTCMilliseconds(secondsValue * 1000);
+      }
     }else{
         return null;
     }
@@ -152,7 +168,23 @@ export class DateTimeComponent extends BaseComponent {
 
   setValueAt(index, value) {
     if (this.inputs[index].calendar && value) {
-      this.inputs[index].calendar.setDate((new Date(value)));
+      this.inputs[index].calendar.setDate((new Date(this.UTCMillisecondsToLocalMilliseconds(value))));
     }
+  }
+
+  getLocalRawValue() {
+    let values = [];
+    for (let i in this.inputs) {
+      if (!this.component.multiple) {
+        return this.inputs[i].value;
+      }
+      values.push(this.inputs[i].value);
+    }
+    return values;
+  }
+
+  asString(defValue) {
+    let value = defValue || this.getLocalRawValue();
+    return _isArray(value) ? value.join(', ') : value.toString();
   }
 }

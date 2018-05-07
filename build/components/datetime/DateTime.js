@@ -29,6 +29,10 @@ var _ru = require('flatpickr/dist/l10n/ru');
 
 var _ru2 = _interopRequireDefault(_ru);
 
+var _isArray2 = require('lodash/isArray');
+
+var _isArray3 = _interopRequireDefault(_isArray2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -148,23 +152,41 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
       }
     }
   }, {
+    key: 'localMillisecondsToUTCMilliseconds',
+    value: function localMillisecondsToUTCMilliseconds(localMs) {
+      var localOffsetMs = new Date().getTimezoneOffset() * 60000;
+      return localMs + localOffsetMs;
+    }
+  }, {
+    key: 'UTCMillisecondsToLocalMilliseconds',
+    value: function UTCMillisecondsToLocalMilliseconds(utcMs) {
+      var localOffsetMs = new Date().getTimezoneOffset() * 60000;
+      return utcMs - localOffsetMs;
+    }
+  }, {
     key: 'getRawValue',
     value: function getRawValue() {
       var values = [];
       for (var i in this.inputs) {
         if (!this.component.multiple) {
-          return this.getDate(this.inputs[i].value);
+          var _secondsValue = this.inputs[i].value;
+          return this.localMillisecondsToUTCMilliseconds(_secondsValue * 1000);
         }
-        values.push(this.getDate(this.inputs[i].value));
+        var secondsValue = this.inputs[i].value;
+        values.push(this.localMillisecondsToUTCMilliseconds(secondsValue * 1000));
       }
       return values;
     }
   }, {
     key: 'getValueAt',
     value: function getValueAt(index) {
-      var date = this.getDate(this.inputs[index].value);
-      if (date) {
-        return date.toISOString();
+      var secondsValue = this.inputs[index].value;
+      if (secondsValue) {
+        if (this.disabled) {
+          return secondsValue * 1000;
+        } else {
+          return this.localMillisecondsToUTCMilliseconds(secondsValue * 1000);
+        }
       } else {
         return null;
       }
@@ -173,8 +195,26 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
     key: 'setValueAt',
     value: function setValueAt(index, value) {
       if (this.inputs[index].calendar && value) {
-        this.inputs[index].calendar.setDate(new Date(value));
+        this.inputs[index].calendar.setDate(new Date(this.UTCMillisecondsToLocalMilliseconds(value)));
       }
+    }
+  }, {
+    key: 'getLocalRawValue',
+    value: function getLocalRawValue() {
+      var values = [];
+      for (var i in this.inputs) {
+        if (!this.component.multiple) {
+          return this.inputs[i].value;
+        }
+        values.push(this.inputs[i].value);
+      }
+      return values;
+    }
+  }, {
+    key: 'asString',
+    value: function asString(defValue) {
+      var value = defValue || this.getLocalRawValue();
+      return (0, _isArray3.default)(value) ? value.join(', ') : value.toString();
     }
   }, {
     key: 'config',
