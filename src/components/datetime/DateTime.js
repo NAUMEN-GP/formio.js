@@ -129,37 +129,20 @@ export class DateTimeComponent extends BaseComponent {
     }
   }
 
-  localMillisecondsToUTCMilliseconds(localMs){
-    let localOffsetMs = (new Date()).getTimezoneOffset() * 60000;
-    return localMs + localOffsetMs;
-  }
-
-  UTCMillisecondsToLocalMilliseconds(utcMs){
-    let localOffsetMs = (new Date()).getTimezoneOffset() * 60000;
-    return utcMs - localOffsetMs;
-  }
-
   getRawValue() {
     let values = [];
     for (let i in this.inputs) {
       if (!this.component.multiple) {
-        let secondsValue = this.inputs[i].value;
-        return this.localMillisecondsToUTCMilliseconds(secondsValue * 1000);
+        return this.inputs[i].value * 1000
       }
-      let secondsValue = this.inputs[i].value;
-      values.push(this.localMillisecondsToUTCMilliseconds(secondsValue * 1000));
+      values.push(this.inputs[i].value * 1000);
     }
     return values;
   }
 
   getValueAt(index) {
-    var secondsValue = this.inputs[index].value;
-    if(secondsValue){
-      if(this.inputs[index].disabled) {
-          return secondsValue * 1000;
-      } else {
-          return this.localMillisecondsToUTCMilliseconds(secondsValue * 1000);
-      }
+    if(this.inputs[index].value){
+        return this.inputs[index].value * 1000;
     }else{
         return null;
     }
@@ -167,11 +150,7 @@ export class DateTimeComponent extends BaseComponent {
 
   setValueAt(index, value) {
     if (this.inputs[index].calendar && value) {
-      if (Number.isInteger(value)) {
-        this.inputs[index].calendar.setDate((new Date(this.UTCMillisecondsToLocalMilliseconds(value))));
-      } else {
-        this.inputs[index].calendar.setDate((new Date(value)));
-      }
+      this.inputs[index].calendar.setDate((new Date(value)));
     }
   }
 }
