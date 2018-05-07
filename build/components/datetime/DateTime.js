@@ -148,23 +148,41 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
       }
     }
   }, {
+    key: 'localMillisecondsToUTCMilliseconds',
+    value: function localMillisecondsToUTCMilliseconds(localMs) {
+      var localOffsetMs = new Date().getTimezoneOffset() * 60000;
+      return localMs + localOffsetMs;
+    }
+  }, {
+    key: 'UTCMillisecondsToLocalMilliseconds',
+    value: function UTCMillisecondsToLocalMilliseconds(utcMs) {
+      var localOffsetMs = new Date().getTimezoneOffset() * 60000;
+      return utcMs - localOffsetMs;
+    }
+  }, {
     key: 'getRawValue',
     value: function getRawValue() {
       var values = [];
       for (var i in this.inputs) {
         if (!this.component.multiple) {
-          return this.getDate(this.inputs[i].value);
+          var _secondsValue = this.inputs[i].value;
+          return this.localMillisecondsToUTCMilliseconds(_secondsValue * 1000);
         }
-        values.push(this.getDate(this.inputs[i].value));
+        var secondsValue = this.inputs[i].value;
+        values.push(this.localMillisecondsToUTCMilliseconds(secondsValue * 1000));
       }
       return values;
     }
   }, {
     key: 'getValueAt',
     value: function getValueAt(index) {
-      var date = this.getDate(this.inputs[index].value);
-      if (date) {
-        return date.toISOString();
+      var secondsValue = this.inputs[index].value;
+      if (secondsValue) {
+        if (this.inputs[index].disabled) {
+          return secondsValue * 1000;
+        } else {
+          return this.localMillisecondsToUTCMilliseconds(secondsValue * 1000);
+        }
       } else {
         return null;
       }
@@ -173,7 +191,11 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
     key: 'setValueAt',
     value: function setValueAt(index, value) {
       if (this.inputs[index].calendar && value) {
-        this.inputs[index].calendar.setDate(new Date(value));
+        if (Number.isInteger(value)) {
+          this.inputs[index].calendar.setDate(new Date(this.UTCMillisecondsToLocalMilliseconds(value)));
+        } else {
+          this.inputs[index].calendar.setDate(new Date(value));
+        }
       }
     }
   }, {
