@@ -155,7 +155,7 @@ export class DateTimeComponent extends BaseComponent {
   getValueAt(index) {
     var secondsValue = this.inputs[index].value;
     if(secondsValue){
-      if(this.disabled) {
+      if(this.inputs[index].disabled) {
           return secondsValue * 1000;
       } else {
           return this.localMillisecondsToUTCMilliseconds(secondsValue * 1000);
@@ -167,7 +167,11 @@ export class DateTimeComponent extends BaseComponent {
 
   setValueAt(index, value) {
     if (this.inputs[index].calendar && value) {
-      this.inputs[index].calendar.setDate((new Date(this.UTCMillisecondsToLocalMilliseconds(value))));
+      if (Number.isInteger(value)) {
+        this.inputs[index].calendar.setDate((new Date(this.UTCMillisecondsToLocalMilliseconds(value))));
+      } else {
+        this.inputs[index].calendar.setDate((new Date(value)));
+      }
     }
   }
 
