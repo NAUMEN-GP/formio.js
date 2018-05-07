@@ -174,15 +174,4 @@ export class DateTimeComponent extends BaseComponent {
       }
     }
   }
-
-  getLocalRawValue() {
-    let values = [];
-    for (let i in this.inputs) {
-      if (!this.component.multiple) {
-        return this.inputs[i].value;
-      }
-      values.push(this.inputs[i].value);
-    }
-    return values;
-  }
 }

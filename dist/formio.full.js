@@ -4497,18 +4497,6 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
       }
     }
   }, {
-    key: 'getLocalRawValue',
-    value: function getLocalRawValue() {
-      var values = [];
-      for (var i in this.inputs) {
-        if (!this.component.multiple) {
-          return this.inputs[i].value;
-        }
-        values.push(this.inputs[i].value);
-      }
-      return values;
-    }
-  }, {
     key: 'config',
     get: function get() {
       var _this2 = this;
