@@ -29,10 +29,6 @@ var _ru = require('flatpickr/dist/l10n/ru');
 
 var _ru2 = _interopRequireDefault(_ru);
 
-var _isArray2 = require('lodash/isArray');
-
-var _isArray3 = _interopRequireDefault(_isArray2);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -209,12 +205,6 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
         values.push(this.inputs[i].value);
       }
       return values;
-    }
-  }, {
-    key: 'asString',
-    value: function asString(defValue) {
-      var value = defValue || this.getLocalRawValue();
-      return (0, _isArray3.default)(value) ? value.join(', ') : value.toString();
     }
   }, {
     key: 'config',

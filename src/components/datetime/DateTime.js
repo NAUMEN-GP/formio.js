@@ -4,7 +4,6 @@ import _get from 'lodash/get';
 import _each from 'lodash/each';
 
 import Russian from "flatpickr/dist/l10n/ru";
-import _isArray from "lodash/isArray";
 
 const momentModule = require('moment');
 
@@ -181,10 +180,5 @@ export class DateTimeComponent extends BaseComponent {
       values.push(this.inputs[i].value);
     }
     return values;
-  }
-
-  asString(defValue) {
-    let value = defValue || this.getLocalRawValue();
-    return _isArray(value) ? value.join(', ') : value.toString();
   }
 }

@@ -4313,10 +4313,6 @@ var _ru = require('flatpickr/dist/l10n/ru');
 
 var _ru2 = _interopRequireDefault(_ru);
 
-var _isArray2 = require('lodash/isArray');
-
-var _isArray3 = _interopRequireDefault(_isArray2);
-
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
@@ -4509,12 +4505,6 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
       return values;
     }
   }, {
-    key: 'asString',
-    value: function asString(defValue) {
-      var value = defValue || this.getLocalRawValue();
-      return (0, _isArray3.default)(value) ? value.join(', ') : value.toString();
-    }
-  }, {
     key: 'config',
     get: function get() {
       var _this2 = this;
@@ -4553,7 +4543,7 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
   return DateTimeComponent;
 }(_Base.BaseComponent);
 
-},{"../base/Base":4,"flatpickr":58,"flatpickr/dist/l10n/ru":59,"lodash/each":256,"lodash/get":260,"lodash/isArray":265,"moment":301}],14:[function(require,module,exports){
+},{"../base/Base":4,"flatpickr":58,"flatpickr/dist/l10n/ru":59,"lodash/each":256,"lodash/get":260,"moment":301}],14:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
