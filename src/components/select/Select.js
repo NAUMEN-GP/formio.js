@@ -79,7 +79,7 @@ export class SelectComponent extends BaseComponent {
 
     // Allow for url interpolation.
     url = this.interpolate(url, {
-      data: this.data,
+      data: Object.assign(this.options, this.data),
       formioBase: Formio.getBaseUrl()
     });
 
