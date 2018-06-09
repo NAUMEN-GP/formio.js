@@ -162,7 +162,17 @@ export class SelectComponent extends BaseComponent {
       classNames: {
         containerOuter: 'choices form-group formio-choices',
         containerInner: 'form-control'
-      }
+      },
+      //настройки поиска здесь
+      /*fuseOptions: {
+        shouldSort: false,
+        threshold: 0,
+        distance: 0,
+        maxPatternLength: 32,
+        minMatchCharLength: 1,
+        keys: [this.component.searchField],
+      },*/
+      shouldSort: false
     });
     if (this.disabled) {
       this.choices.disable();
