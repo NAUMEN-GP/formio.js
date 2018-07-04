@@ -44,6 +44,26 @@ export class FormioComponents extends BaseComponent {
   }
 
   /**
+   * Perform a deep iteration over every component, including containers those
+   * within other container based components.
+   *
+   * @param {function} cb - Called for every component.
+   */
+  everyComponentWithContainers(cb) {
+    let components = this.getComponents();
+    _each(components, (component, index) => {
+      if (component.type === 'components') {
+        if (cb(component, components, index) === false || component.everyComponent(cb) === false) {
+          return false;
+        }
+      }
+      else if (cb(component, components, index) === false) {
+        return false;
+      }
+    });
+  }
+
+  /**
    * Perform an iteration over each component within this container component.
    *
    * @param {function} cb - Called for each component
@@ -67,6 +87,28 @@ export class FormioComponents extends BaseComponent {
   getComponent(key, cb) {
     let comp = null;
     this.everyComponent((component, components) => {
+      if (component.component.key === key) {
+        comp = component;
+        if (cb) {
+          cb(component, components);
+        }
+        return false;
+      }
+    });
+    return comp;
+  }
+
+  /**
+   * Returns a component provided a key. This performs a deep search within the
+   * component tree.
+   *
+   * @param {string} key - The key of the component to retrieve.
+   * @param {function} cb - Called with the component once found.
+   * @return {Object} - The component that is located.
+   */
+  getComponentWithContainers(key, cb) {
+    let comp = null;
+    this.everyComponentWithContainers((component, components) => {
       if (component.component.key === key) {
         comp = component;
         if (cb) {
@@ -147,6 +189,28 @@ export class FormioComponents extends BaseComponent {
    */
   removeComponentByKey(key, cb) {
     let comp = this.getComponent(key, (component, components) => {
+      this.removeComponent(component, components);
+      if (cb) {
+        cb(component, components);
+      }
+    });
+    if (!comp) {
+      if (cb) {
+        cb(null);
+      }
+      return null;
+    }
+  }
+
+  /**
+   * Removes a component provided the API key of that component.
+   *
+   * @param {string} key - The API key of the component to remove.
+   * @param {function} cb - Called once the component is removed.
+   * @return {null}
+   */
+  removeComponentByKeyWithContainers(key, cb) {
+    let comp = this.getComponentWithContainers(key, (component, components) => {
       this.removeComponent(component, components);
       if (cb) {
         cb(component, components);

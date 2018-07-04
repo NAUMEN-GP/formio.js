@@ -88,6 +88,28 @@ var FormioComponents = exports.FormioComponents = function (_BaseComponent) {
     }
 
     /**
+     * Perform a deep iteration over every component, including containers those
+     * within other container based components.
+     *
+     * @param {function} cb - Called for every component.
+     */
+
+  }, {
+    key: 'everyComponentWithContainers',
+    value: function everyComponentWithContainers(cb) {
+      var components = this.getComponents();
+      (0, _each3.default)(components, function (component, index) {
+        if (component.type === 'components') {
+          if (cb(component, components, index) === false && component.everyComponent(cb) === false) {
+            return false;
+          }
+        } else if (cb(component, components, index) === false) {
+          return false;
+        }
+      });
+    }
+
+    /**
      * Perform an iteration over each component within this container component.
      *
      * @param {function} cb - Called for each component
@@ -117,6 +139,31 @@ var FormioComponents = exports.FormioComponents = function (_BaseComponent) {
     value: function getComponent(key, cb) {
       var comp = null;
       this.everyComponent(function (component, components) {
+        if (component.component.key === key) {
+          comp = component;
+          if (cb) {
+            cb(component, components);
+          }
+          return false;
+        }
+      });
+      return comp;
+    }
+
+    /**
+     * Returns a component provided a key. This performs a deep search within the
+     * component tree.
+     *
+     * @param {string} key - The key of the component to retrieve.
+     * @param {function} cb - Called with the component once found.
+     * @return {Object} - The component that is located.
+     */
+
+  }, {
+    key: 'getComponentWithContainers',
+    value: function getComponentWithContainers(key, cb) {
+      var comp = null;
+      this.everyComponentWithContainers(function (component, components) {
         if (component.component.key === key) {
           comp = component;
           if (cb) {
@@ -225,6 +272,33 @@ var FormioComponents = exports.FormioComponents = function (_BaseComponent) {
     }
 
     /**
+     * Removes a component provided the API key of that component.
+     *
+     * @param {string} key - The API key of the component to remove.
+     * @param {function} cb - Called once the component is removed.
+     * @return {null}
+     */
+
+  }, {
+    key: 'removeComponentByKeyWithContainers',
+    value: function removeComponentByKeyWithContainers(key, cb) {
+      var _this3 = this;
+
+      var comp = this.getComponentWithContainers(key, function (component, components) {
+        _this3.removeComponent(component, components);
+        if (cb) {
+          cb(component, components);
+        }
+      });
+      if (!comp) {
+        if (cb) {
+          cb(null);
+        }
+        return null;
+      }
+    }
+
+    /**
      * Removes a component provided the Id of the component.
      *
      * @param {string} id - The Id of the component to remove.
@@ -235,10 +309,10 @@ var FormioComponents = exports.FormioComponents = function (_BaseComponent) {
   }, {
     key: 'removeComponentById',
     value: function removeComponentById(id, cb) {
-      var _this3 = this;
+      var _this4 = this;
 
       var comp = this.getComponentById(id, function (component, components) {
-        _this3.removeComponent(component, components);
+        _this4.removeComponent(component, components);
         if (cb) {
           cb(component, components);
         }
@@ -260,12 +334,12 @@ var FormioComponents = exports.FormioComponents = function (_BaseComponent) {
   }, {
     key: 'addComponents',
     value: function addComponents(element, data) {
-      var _this4 = this;
+      var _this5 = this;
 
       element = element || this.element;
       data = data || this.data;
       (0, _each3.default)(this.component.components, function (component) {
-        return _this4.addComponent(component, element, data);
+        return _this5.addComponent(component, element, data);
       });
     }
   }, {
@@ -362,12 +436,12 @@ var FormioComponents = exports.FormioComponents = function (_BaseComponent) {
   }, {
     key: 'destroy',
     value: function destroy(all) {
-      var _this5 = this;
+      var _this6 = this;
 
       _get(FormioComponents.prototype.__proto__ || Object.getPrototypeOf(FormioComponents.prototype), 'destroy', this).call(this, all);
       var components = (0, _clone3.default)(this.components);
       (0, _each3.default)(components, function (comp) {
-        return _this5.removeComponent(comp, _this5.components);
+        return _this6.removeComponent(comp, _this6.components);
       });
       this.components = [];
       this.hidden = [];
@@ -386,11 +460,11 @@ var FormioComponents = exports.FormioComponents = function (_BaseComponent) {
   }, {
     key: 'hideComponents',
     value: function hideComponents(hidden) {
-      var _this6 = this;
+      var _this7 = this;
 
       this.hidden = hidden;
       this.eachComponent(function (component) {
-        return _this6.setHidden(component);
+        return _this7.setHidden(component);
       });
     }
   }, {
