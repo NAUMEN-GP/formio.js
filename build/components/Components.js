@@ -100,7 +100,7 @@ var FormioComponents = exports.FormioComponents = function (_BaseComponent) {
       var components = this.getComponents();
       (0, _each3.default)(components, function (component, index) {
         if (component.type === 'components') {
-          if (cb(component, components, index) === false && component.everyComponent(cb) === false) {
+          if (cb(component, components, index) === false || component.everyComponent(cb) === false) {
             return false;
           }
         } else if (cb(component, components, index) === false) {
