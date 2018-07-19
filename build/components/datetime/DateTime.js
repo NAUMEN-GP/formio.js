@@ -176,6 +176,11 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
       }
     }
   }, {
+    key: 'isEmpty',
+    value: function isEmpty(value) {
+      return value == null || value === 0 || value.length === 0;
+    }
+  }, {
     key: 'config',
     get: function get() {
       var _this2 = this;

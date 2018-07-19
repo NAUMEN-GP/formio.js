@@ -4548,6 +4548,11 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
       }
     }
   }, {
+    key: 'isEmpty',
+    value: function isEmpty(value) {
+      return value == null || value === 0 || value.length === 0;
+    }
+  }, {
     key: 'config',
     get: function get() {
       var _this2 = this;
@@ -12121,8 +12126,7 @@ this.store.dispatch((0,p.addItem)(a,h,f,u,n,s,o,c)),this.isSelectOneElement&&thi
     if (testForm.method !== 'dialog') {
       var methodDescriptor = Object.getOwnPropertyDescriptor(HTMLFormElement.prototype, 'method');
       if (methodDescriptor) {
-        // nb. Some older iOS and older PhantomJS fail to return the descriptor. Don't do anything
-        // and don't bother to update the element.
+        // TODO: older iOS and older PhantomJS fail to return the descriptor here
         var realGet = methodDescriptor.get;
         methodDescriptor.get = function() {
           if (isFormMethodDialog(this)) {
@@ -12172,13 +12176,13 @@ this.store.dispatch((0,p.addItem)(a,h,f,u,n,s,o,c)),this.isSelectOneElement&&thi
      * submit event and give us a chance to respond.
      */
     var nativeFormSubmit = HTMLFormElement.prototype.submit;
-    var replacementFormSubmit = function () {
+    function replacementFormSubmit() {
       if (!isFormMethodDialog(this)) {
         return nativeFormSubmit.call(this);
       }
       var dialog = findNearestDialog(this);
       dialog && dialog.close();
-    };
+    }
     HTMLFormElement.prototype.submit = replacementFormSubmit;
 
     /**

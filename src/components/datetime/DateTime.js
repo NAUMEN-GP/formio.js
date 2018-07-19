@@ -153,4 +153,8 @@ export class DateTimeComponent extends BaseComponent {
       this.inputs[index].calendar.setDate((new Date(value)));
     }
   }
+
+  isEmpty(value) {
+      return value == null || value === 0 || value.length === 0;
+  }
 }
