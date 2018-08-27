@@ -1378,6 +1378,17 @@ var BaseComponent = function () {
       }
       this.value = value;
       var isArray = (0, _isArray3.default)(value);
+
+      // flags не пустой, когда setValue вызывается по инициативе buildRows.
+      // Проверка flags необходима для исключения возможности бесконечного цикла.
+      if (this.component.multiple && Object.keys(flags).length === 0) {
+        var count = value.length - this.inputs.length;
+        if (count > 0) {
+          this.data[this.component.key] = value;
+          this.buildRows();
+        }
+      }
+
       for (var i in this.inputs) {
         this.setValueAt(i, isArray ? value[i] : value);
       }
