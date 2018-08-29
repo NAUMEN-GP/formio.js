@@ -1937,7 +1937,7 @@ var BaseComponent = function () {
         }
 
         // Build the rows.
-        this.buildRows();
+        this.buildRows(false);
 
         // Add the table to the element.
         this.append(table);
@@ -1994,21 +1994,29 @@ var BaseComponent = function () {
     value: function buildRows() {
       var _this2 = this;
 
+      var ignoreEmptyDataCheck = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
       if (!this.tbody) {
         return;
       }
       this.inputs = [];
       this.tbody.innerHTML = '';
-      (0, _each3.default)(this.data[this.component.key], function (value, index) {
-        var tr = _this2.ce('tr');
-        var td = _this2.ce('td');
-        _this2.createInput(td);
-        tr.appendChild(td);
-        var tdAdd = _this2.ce('td');
-        tdAdd.appendChild(_this2.removeButton(index));
-        tr.appendChild(tdAdd);
-        _this2.tbody.appendChild(tr);
-      });
+
+      var dataArray = this.data[this.component.key];
+      if (ignoreEmptyDataCheck || dataArray.filter(function (v) {
+        return v && !!v.trim();
+      }).length) {
+        (0, _each3.default)(dataArray, function (value, index) {
+          var tr = _this2.ce('tr');
+          var td = _this2.ce('td');
+          _this2.createInput(td);
+          tr.appendChild(td);
+          var tdAdd = _this2.ce('td');
+          tdAdd.appendChild(_this2.removeButton(index));
+          tr.appendChild(tdAdd);
+          _this2.tbody.appendChild(tr);
+        });
+      }
 
       var tr = this.ce('tr');
       var td = this.ce('td', {
@@ -2847,7 +2855,7 @@ var BaseComponent = function () {
         var count = value.length - this.inputs.length;
         if (count > 0) {
           this.data[this.component.key] = value;
-          this.buildRows();
+          this.buildRows(false);
         }
       }
 

@@ -9,7 +9,7 @@ import _clone from 'lodash/clone';
 import _defaults from 'lodash/defaults';
 import i18next from 'i18next';
 import FormioUtils from '../../utils';
-import { Validator } from '../Validator';
+import {Validator} from '../Validator';
 
 i18next.initialized = false;
 
@@ -371,10 +371,10 @@ export class BaseComponent {
    */
   get customStyle() {
     let customCSS = '';
-    _each(this.component.style, function(value, key) {
-        if (value !== '') {
-          customCSS += key + ':' + value + ';';
-        }
+    _each(this.component.style, function (value, key) {
+      if (value !== '') {
+        customCSS += key + ':' + value + ';';
+      }
     });
     return customCSS;
   }
@@ -427,7 +427,7 @@ export class BaseComponent {
       }
 
       // Build the rows.
-      this.buildRows();
+      this.buildRows(false);
 
       // Add the table to the element.
       this.append(table);
@@ -510,22 +510,26 @@ export class BaseComponent {
   /**
    * Rebuild the rows to contain the values of this component.
    */
-  buildRows() {
+  buildRows(ignoreEmptyDataCheck = true) {
     if (!this.tbody) {
       return;
     }
     this.inputs = [];
     this.tbody.innerHTML = '';
-    _each(this.data[this.component.key], (value, index) => {
-      let tr = this.ce('tr');
-      let td = this.ce('td');
-      this.createInput(td);
-      tr.appendChild(td);
-      let tdAdd = this.ce('td');
-      tdAdd.appendChild(this.removeButton(index));
-      tr.appendChild(tdAdd);
-      this.tbody.appendChild(tr);
-    });
+
+    let dataArray = this.data[this.component.key];
+    if (ignoreEmptyDataCheck || dataArray.filter(v => v && !!v.trim()).length) {
+      _each(dataArray, (value, index) => {
+        let tr = this.ce('tr');
+        let td = this.ce('td');
+        this.createInput(td);
+        tr.appendChild(td);
+        let tdAdd = this.ce('td');
+        tdAdd.appendChild(this.removeButton(index));
+        tr.appendChild(tdAdd);
+        this.tbody.appendChild(tr);
+      });
+    }
 
     let tr = this.ce('tr');
     let td = this.ce('td', {
@@ -620,12 +624,12 @@ export class BaseComponent {
     }
     this.labelElement.appendChild(this.text(this.component.label));
 
-    if(this.component.tooltip) {
-        let tooltipElement = this.ce('span', {
-            class: 'glyphicon glyphicon-question-sign',
-            tooltip: this.component.tooltip
-        });
-        this.labelElement.appendChild(tooltipElement);
+    if (this.component.tooltip) {
+      let tooltipElement = this.ce('span', {
+        class: 'glyphicon glyphicon-question-sign',
+        tooltip: this.component.tooltip
+      });
+      this.labelElement.appendChild(tooltipElement);
     }
 
     container.appendChild(this.labelElement);
@@ -646,7 +650,8 @@ export class BaseComponent {
     container.appendChild(this.description);
   }
 
-  createHint(container){}
+  createHint(container) {
+  }
 
   /**
    * Creates a new error element to hold the errors of this element.
@@ -727,7 +732,7 @@ export class BaseComponent {
       return mask;
     }
     let maskArray = [];
-    for (let i=0; i < mask.length; i++) {
+    for (let i = 0; i < mask.length; i++) {
       switch (mask[i]) {
         case '9':
           maskArray.push(/\d/);
@@ -803,7 +808,7 @@ export class BaseComponent {
    */
   addEventListener(obj, evt, func) {
     this.eventHandlers.push({type: evt, func: func});
-    if ('addEventListener' in obj){
+    if ('addEventListener' in obj) {
       obj.addEventListener(evt, func, false);
     } else if ('attachEvent' in obj) {
       obj.attachEvent('on' + evt, func);
@@ -1223,7 +1228,8 @@ export class BaseComponent {
       try {
         this.errorContainer.removeChild(this.errorElement);
       }
-      catch (err) {}
+      catch (err) {
+      }
     }
     this.removeClass(this.element, 'has-error');
     if (this.options.highlightErrors) {
@@ -1284,11 +1290,11 @@ export class BaseComponent {
 
     // flags не пустой, когда setValue вызывается по инициативе buildRows.
     // Проверка flags необходима для исключения возможности бесконечного цикла.
-    if(this.component.multiple && Object.keys(flags).length === 0) {
+    if (this.component.multiple && Object.keys(flags).length === 0) {
       var count = value.length - this.inputs.length;
-      if(count > 0) {
+      if (count > 0) {
         this.data[this.component.key] = value;
-        this.buildRows();
+        this.buildRows(false);
       }
     }
 
@@ -1418,37 +1424,37 @@ export class BaseComponent {
   }
 
   decOfNum(count, titles) {
-     let a = count % 100;
-     let b = count % 10;
-     if(a > 10 && a < 20) return titles[2];
-     if(b > 1 && b < 5) return titles[1];
-     if(b === 1) return titles[0];
-     return titles[2];
+    let a = count % 100;
+    let b = count % 10;
+    if (a > 10 && a < 20) return titles[2];
+    if (b > 1 && b < 5) return titles[1];
+    if (b === 1) return titles[0];
+    return titles[2];
   }
 
   htmlToPlainText(html) {
-      let el = document.createElement('div');
-      el.innerHTML = html;
-      let array = [];
-      let elements = el.children;
-      for(let i = 0; i < elements.length; i++) {
-          array.push(elements[i].textContent);
+    let el = document.createElement('div');
+    el.innerHTML = html;
+    let array = [];
+    let elements = el.children;
+    for (let i = 0; i < elements.length; i++) {
+      array.push(elements[i].textContent);
+    }
+    //fix for IE
+    if (!el.remove) {
+      if (el.parentNode) {
+        el.parentNode.removeChild(el);
       }
-      //fix for IE
-      if(!el.remove){
-          if(el.parentNode){
-              el.parentNode.removeChild(el);
-          }
-      }else{
-        el.remove();
-      }
+    } else {
+      el.remove();
+    }
 
-      return array.join('').replace(/\s/g,'');
+    return array.join('').replace(/\s/g, '');
   }
 }
 
 BaseComponent.externalLibraries = {};
-BaseComponent.requireLibrary = function(name, property, src, polling) {
+BaseComponent.requireLibrary = function (name, property, src, polling) {
   if (!BaseComponent.externalLibraries.hasOwnProperty(name)) {
     BaseComponent.externalLibraries[name] = {};
     BaseComponent.externalLibraries[name].ready = new Promise((resolve, reject) => {
@@ -1457,7 +1463,7 @@ BaseComponent.requireLibrary = function(name, property, src, polling) {
     });
 
     if (!polling && !window[name + 'Callback']) {
-      window[name + 'Callback'] = function() {
+      window[name + 'Callback'] = function () {
         this.resolve();
       }.bind(BaseComponent.externalLibraries[name]);
     }
@@ -1523,7 +1529,7 @@ BaseComponent.requireLibrary = function(name, property, src, polling) {
   return BaseComponent.externalLibraries[name].ready;
 };
 
-BaseComponent.libraryReady = function(name) {
+BaseComponent.libraryReady = function (name) {
   if (
     BaseComponent.externalLibraries.hasOwnProperty(name) &&
     BaseComponent.externalLibraries[name].ready
