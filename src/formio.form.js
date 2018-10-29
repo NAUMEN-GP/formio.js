@@ -575,35 +575,39 @@ export class FormioForm extends FormioComponents {
   /**
    * Show the errors of this form within the alert dialog.
    *
-   * @param {Object} error - An optional additional error to display along with the component errors.
+   * @param {Object} errors - An optional additional errors to display along with the component errors.
    * @returns {*}
    */
-  showErrors(error) {
+  showErrors(errors) {
     this.loading = false;
-    let errors = this.errors;
-    if (error) {
-      errors.push(error);
+    let mergedErrors = this.errors;
+    let customMessage = this.t('error');
+    if (errors) {
+      _each(errors, err => {
+        if (err.key) {
+          let comp = this.getComponent(err.key);
+          if (comp) {
+            comp.setCustomValidity(err.message, true);
+            mergedErrors.push({
+              component: comp,
+              message: err.message
+            });
+          } else {
+            customMessage = err.message;
+          }
+        } else {
+          customMessage = err.message;
+        }
+      });
     }
-    if (!errors.length) {
+    if (!mergedErrors.length) {
       this.setAlert(false);
       return;
     }
-    let message = '<p>' + this.t('error') + '</p>';
-    if(!this.options.errorTitleOnly){
-        message += '<ul>';
-        let me = this;
-        _each(errors, (err) => {
-            if (err) {
-                let errorMessage = err.message || err;
-                message += '<li><strong>' + me.t(errorMessage) + '</strong></li>';
-            }
-        });
-        message += '</ul>';
-    }
 
-    this.setAlert('danger', message);
-    this.emit('error', errors);
-    return errors;
+    this.setAlert('danger', '<p>' + customMessage + '</p>');
+    this.emit('error', mergedErrors);
+    return mergedErrors;
   }
 
   /**
@@ -625,21 +629,23 @@ export class FormioForm extends FormioComponents {
   }
 
   /**
-   * Called when an error occurs during the submission.
+   * Called when an errors occurs during the submission.
    *
-   * @param {Object} error - The error that occured.
+   * @param {Object} errors - The errors that occured.
    */
-  onSubmissionError(error) {
-    if (!error) {
+  onSubmissionError(errors) {
+    if (!errors) {
       return;
     }
 
-    // Normalize the error.
-    if (typeof error === 'string') {
-      error = {message: error};
+    // Normalize the errors.
+    if (typeof errors === 'string') {
+      errors = [{message: errors}];
+    } else if (typeof errors === 'object' && !Array.isArray(errors)) {
+      errors = [errors];
     }
 
-    this.showErrors(error);
+    this.showErrors(errors);
   }
 
   /**

@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.FormioForm = undefined;
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
@@ -532,38 +534,44 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
     /**
      * Show the errors of this form within the alert dialog.
      *
-     * @param {Object} error - An optional additional error to display along with the component errors.
+     * @param {Object} errors - An optional additional errors to display along with the component errors.
      * @returns {*}
      */
 
   }, {
     key: "showErrors",
-    value: function showErrors(error) {
+    value: function showErrors(errors) {
+      var _this9 = this;
+
       this.loading = false;
-      var errors = this.errors;
-      if (error) {
-        errors.push(error);
+      var mergedErrors = this.errors;
+      var customMessage = this.t('error');
+      if (errors) {
+        (0, _each3.default)(errors, function (err) {
+          if (err.key) {
+            var comp = _this9.getComponent(err.key);
+            if (comp) {
+              comp.setCustomValidity(err.message, true);
+              mergedErrors.push({
+                component: comp,
+                message: err.message
+              });
+            } else {
+              customMessage = err.message;
+            }
+          } else {
+            customMessage = err.message;
+          }
+        });
       }
-      if (!errors.length) {
+      if (!mergedErrors.length) {
         this.setAlert(false);
         return;
       }
-      var message = '<p>' + this.t('error') + '</p>';
-      if (!this.options.errorTitleOnly) {
-        message += '<ul>';
-        var me = this;
-        (0, _each3.default)(errors, function (err) {
-          if (err) {
-            var errorMessage = err.message || err;
-            message += '<li><strong>' + me.t(errorMessage) + '</strong></li>';
-          }
-        });
-        message += '</ul>';
-      }
 
-      this.setAlert('danger', message);
-      this.emit('error', errors);
-      return errors;
+      this.setAlert('danger', '<p>' + customMessage + '</p>');
+      this.emit('error', mergedErrors);
+      return mergedErrors;
     }
 
     /**
@@ -588,24 +596,26 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
     }
 
     /**
-     * Called when an error occurs during the submission.
+     * Called when an errors occurs during the submission.
      *
-     * @param {Object} error - The error that occured.
+     * @param {Object} errors - The errors that occured.
      */
 
   }, {
     key: "onSubmissionError",
-    value: function onSubmissionError(error) {
-      if (!error) {
+    value: function onSubmissionError(errors) {
+      if (!errors) {
         return;
       }
 
-      // Normalize the error.
-      if (typeof error === 'string') {
-        error = { message: error };
+      // Normalize the errors.
+      if (typeof errors === 'string') {
+        errors = [{ message: errors }];
+      } else if ((typeof errors === "undefined" ? "undefined" : _typeof(errors)) === 'object' && !Array.isArray(errors)) {
+        errors = [errors];
       }
 
-      this.showErrors(error);
+      this.showErrors(errors);
     }
 
     /**
@@ -665,7 +675,7 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
   }, {
     key: "executeSubmit",
     value: function executeSubmit() {
-      var _this9 = this;
+      var _this10 = this;
 
       var submission = this.submission;
       if (submission && submission.data && this.checkValidity(submission.data, true)) {
@@ -674,11 +684,11 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
           return this.onSubmit(submission, false);
         }
         return this.formio.saveSubmission(submission).then(function (result) {
-          return _this9.onSubmit(result, true);
+          return _this10.onSubmit(result, true);
         }, function (err) {
-          return _this9.onSubmissionError(err);
+          return _this10.onSubmissionError(err);
         }).catch(function (err) {
-          return _this9.onSubmissionError(err);
+          return _this10.onSubmissionError(err);
         });
       } else {
         this.showErrors();
@@ -709,11 +719,11 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
   }, {
     key: "submit",
     value: function submit(before) {
-      var _this10 = this;
+      var _this11 = this;
 
       if (!before) {
         return this.beforeSubmit().then(function () {
-          return _this10.executeSubmit();
+          return _this11.executeSubmit();
         });
       } else {
         return this.executeSubmit();
@@ -725,18 +735,18 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
       return this._src;
     },
     set: function set(value) {
-      var _this11 = this;
+      var _this12 = this;
 
       this.url = value;
       this.nosubmit = false;
       this.formio.loadForm().then(function (form) {
-        var setForm = _this11.setForm(form);
-        _this11.loadSubmission();
+        var setForm = _this12.setForm(form);
+        _this12.loadSubmission();
         return setForm;
       }, function (err) {
-        return _this11.formReadyReject(err);
+        return _this12.formReadyReject(err);
       }).catch(function (err) {
-        return _this11.formReadyReject(err);
+        return _this12.formReadyReject(err);
       });
     }
 
@@ -781,10 +791,10 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
   }, {
     key: "ready",
     get: function get() {
-      var _this12 = this;
+      var _this13 = this;
 
       return this.formReady.then(function () {
-        return _this12.submissionReady;
+        return _this13.submissionReady;
       });
     }
 

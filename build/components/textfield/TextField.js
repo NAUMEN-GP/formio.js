@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.TextFieldComponent = undefined;
 
@@ -18,79 +18,79 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var TextFieldComponent = exports.TextFieldComponent = function (_BaseComponent) {
-    _inherits(TextFieldComponent, _BaseComponent);
+  _inherits(TextFieldComponent, _BaseComponent);
 
-    function TextFieldComponent() {
-        _classCallCheck(this, TextFieldComponent);
+  function TextFieldComponent() {
+    _classCallCheck(this, TextFieldComponent);
 
-        return _possibleConstructorReturn(this, (TextFieldComponent.__proto__ || Object.getPrototypeOf(TextFieldComponent)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (TextFieldComponent.__proto__ || Object.getPrototypeOf(TextFieldComponent)).apply(this, arguments));
+  }
+
+  _createClass(TextFieldComponent, [{
+    key: 'elementInfo',
+    value: function elementInfo() {
+      var info = _get(TextFieldComponent.prototype.__proto__ || Object.getPrototypeOf(TextFieldComponent.prototype), 'elementInfo', this).call(this);
+      info.type = 'input';
+      info.attr.type = 'text';
+      info.changeEvent = 'input';
+      return info;
     }
+  }, {
+    key: 'createHint',
+    value: function createHint(container) {
+      if (!(this.component.validate && this.component.validate.maxLength)) {
+        return;
+      }
 
-    _createClass(TextFieldComponent, [{
-        key: 'elementInfo',
-        value: function elementInfo() {
-            var info = _get(TextFieldComponent.prototype.__proto__ || Object.getPrototypeOf(TextFieldComponent.prototype), 'elementInfo', this).call(this);
-            info.type = 'input';
-            info.attr.type = 'text';
-            info.changeEvent = 'input';
-            return info;
+      var leftCharsHint = this.ce('div', { class: 'edit-hint' });
+      var beforeWord = this.ce('span', { class: 'before-word' });
+      leftCharsHint.appendChild(beforeWord);
+      var leftCharacters = this.ce('span', { class: 'left-characters' });
+      leftCharsHint.appendChild(leftCharacters);
+      var afterWord = this.ce('span', { class: 'after-word' });
+      leftCharsHint.appendChild(afterWord);
+
+      var limit = this.component.validate.maxLength;
+      var me = this;
+
+      var beforeWords = ['left1', 'left2', 'left3'];
+      var afterWords = ['char1', 'char2', 'char3'];
+
+      function updateCountInfo() {
+        var value = void 0;
+        if (me.component.wysiwyg) {
+          value = me.htmlToPlainText(me.getValue());
+        } else {
+          value = me.getValue();
         }
-    }, {
-        key: 'createHint',
-        value: function createHint(container) {
-            if (!(this.component.validate && this.component.validate.maxLength)) {
-                return;
-            }
+        var length = value ? value.length : 0;
+        var left = limit - length;
+        leftCharacters.innerHTML = left.toString();
+        beforeWord.innerHTML = me.t(me.decOfNum(Math.abs(left), beforeWords)) + '&nbsp;';
+        afterWord.innerHTML = '&nbsp;' + me.t(me.decOfNum(Math.abs(left), afterWords));
 
-            var leftCharsHint = this.ce('div', { class: 'edit-hint' });
-            var beforeWord = this.ce('span', { class: 'before-word' });
-            leftCharsHint.appendChild(beforeWord);
-            var leftCharacters = this.ce('span', { class: 'left-characters' });
-            leftCharsHint.appendChild(leftCharacters);
-            var afterWord = this.ce('span', { class: 'after-word' });
-            leftCharsHint.appendChild(afterWord);
-
-            var limit = this.component.validate.maxLength;
-            var me = this;
-
-            var beforeWords = ['left1', 'left2', 'left3'];
-            var afterWords = ['char1', 'char2', 'char3'];
-
-            function updateCountInfo() {
-                var value = void 0;
-                if (me.component.wysiwyg) {
-                    value = me.htmlToPlainText(me.getValue());
-                } else {
-                    value = me.getValue();
-                }
-                var length = value ? value.length : 0;
-                var left = limit - length;
-                leftCharacters.innerHTML = left.toString();
-                beforeWord.innerHTML = me.t(me.decOfNum(Math.abs(left), beforeWords)) + '&nbsp;';
-                afterWord.innerHTML = '&nbsp;' + me.t(me.decOfNum(Math.abs(left), afterWords));
-
-                var containsColorRed = leftCharacters.classList.contains('color-red');
-                if (length > limit) {
-                    if (!containsColorRed) {
-                        me.addClass(leftCharacters, 'color-red');
-                    }
-                } else if (containsColorRed) {
-                    me.removeClass(leftCharacters, 'color-red');
-                }
-            }
-
-            /*let interval;
-            this.addEventListener(input, 'focus', function(){
-                interval = setInterval(updateCountInfo, 100);
-            });
-            this.addEventListener(input, 'blur', function(){
-                clearInterval(interval);
-            });*/
-
-            this.errorContainer.appendChild(leftCharsHint);
-            this.on('componentChange', updateCountInfo, true);
+        var containsColorRed = leftCharacters.classList.contains('color-red');
+        if (length > limit) {
+          if (!containsColorRed) {
+            me.addClass(leftCharacters, 'color-red');
+          }
+        } else if (containsColorRed) {
+          me.removeClass(leftCharacters, 'color-red');
         }
-    }]);
+      }
 
-    return TextFieldComponent;
+      /*let interval;
+      this.addEventListener(input, 'focus', function(){
+          interval = setInterval(updateCountInfo, 100);
+      });
+      this.addEventListener(input, 'blur', function(){
+          clearInterval(interval);
+      });*/
+
+      this.errorContainer.appendChild(leftCharsHint);
+      this.on('componentChange', updateCountInfo, true);
+    }
+  }]);
+
+  return TextFieldComponent;
 }(_Base.BaseComponent);
