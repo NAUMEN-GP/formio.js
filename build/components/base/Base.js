@@ -343,9 +343,12 @@ var BaseComponent = function () {
     value: function localize() {
       var _this = this;
 
-      if (_i18next2.default.initialized) {
-        return _nativePromiseOnly2.default.resolve(_i18next2.default);
-      }
+      /*
+        //Не нужно. Убрали для того, что бы для каждой формы применялся свой перевод
+        if (i18next.initialized) {
+          return Promise.resolve(i18next);
+        }
+      */
       _i18next2.default.initialized = true;
       return new _nativePromiseOnly2.default(function (resolve, reject) {
         _i18next2.default.init(_this.options.i18n, function (err, t) {
