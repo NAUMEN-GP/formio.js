@@ -288,9 +288,12 @@ export class BaseComponent {
    * @returns {*}
    */
   localize() {
+  /*
+    //Не нужно. Убрали для того, что бы для каждой формы применялся свой перевод
     if (i18next.initialized) {
       return Promise.resolve(i18next);
     }
+  */
     i18next.initialized = true;
     return new Promise((resolve, reject) => {
       i18next.init(this.options.i18n, (err, t) => {
