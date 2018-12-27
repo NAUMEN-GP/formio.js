@@ -1052,8 +1052,10 @@ export class BaseComponent {
       input = container.appendChild(input);
     }
     this.addInputEventListener(input);
-    this.addInputSubmitListener(input);
-
+    /**
+     * Непонятно, зачем надо сабмитить форму по ентеру на любом поле ввода...
+     * this.addInputSubmitListener(input);
+     */
     // Reset the values of the inputs.
     if (!noSet && this.data && this.data.hasOwnProperty(this.component.key)) {
       this.setValue(this.data[this.component.key], {
