@@ -545,7 +545,7 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
 
       this.loading = false;
       var mergedErrors = this.errors;
-      var customMessage = this.t('error');
+      var customMessage = null;
       if (errors) {
         (0, _each3.default)(errors, function (err) {
           if (err.key) {
@@ -563,13 +563,12 @@ var FormioForm = exports.FormioForm = function (_FormioComponents) {
             customMessage = err.message;
           }
         });
-      }
-      if (!mergedErrors.length) {
+      } else if (!mergedErrors.length) {
         this.setAlert(false);
         return;
       }
 
-      this.setAlert('danger', '<p>' + customMessage + '</p>');
+      this.setAlert('danger', '<p>' + (customMessage ? customMessage : this.t('error')) + '</p>');
       this.emit('error', mergedErrors);
       return mergedErrors;
     }
