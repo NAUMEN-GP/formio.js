@@ -581,7 +581,7 @@ export class FormioForm extends FormioComponents {
   showErrors(errors) {
     this.loading = false;
     let mergedErrors = this.errors;
-    let customMessage = this.t('error');
+    let customMessage = null;
     if (errors) {
       _each(errors, err => {
         if (err.key) {
@@ -599,13 +599,12 @@ export class FormioForm extends FormioComponents {
           customMessage = err.message;
         }
       });
-    }
-    if (!mergedErrors.length) {
+    } else if (!mergedErrors.length) {
       this.setAlert(false);
       return;
     }
 
-    this.setAlert('danger', '<p>' + customMessage + '</p>');
+    this.setAlert('danger', '<p>' + (customMessage ? customMessage : this.t('error')) + '</p>');
     this.emit('error', mergedErrors);
     return mergedErrors;
   }
