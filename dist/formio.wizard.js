@@ -654,6 +654,9 @@ var Validator = exports.Validator = {
         if (!_index2.default.boolValue(setting)) {
           return true;
         }
+        if (component.component.type == 'checkbox') {
+          return !component.isEmpty(value) && value;
+        }
         return !component.isEmpty(value);
       }
     },
@@ -3579,8 +3582,14 @@ var CheckBoxComponent = exports.CheckBoxComponent = function (_BaseComponent) {
       if (!this.component.label) {
         return null;
       }
+
+      var className = 'control-label';
+      if (this.component.input && this.component.validate && this.component.validate.required) {
+        className += ' field-required';
+      }
+
       this.labelElement = this.ce('label', {
-        class: 'control-label'
+        class: className
       });
 
       // Create the SPAN around the textNode for better style hooks
@@ -3595,6 +3604,9 @@ var CheckBoxComponent = exports.CheckBoxComponent = function (_BaseComponent) {
         this.labelElement.appendChild(this.labelSpan);
       }
       container.appendChild(this.labelElement);
+
+      this.errorContainer = this.ce('div', { class: 'error-container' });
+      container.appendChild(this.errorContainer);
     }
   }, {
     key: 'createInput',
@@ -12593,7 +12605,8 @@ this.store.dispatch((0,p.addItem)(a,h,f,u,n,s,o,c)),this.isSelectOneElement&&thi
     if (testForm.method !== 'dialog') {
       var methodDescriptor = Object.getOwnPropertyDescriptor(HTMLFormElement.prototype, 'method');
       if (methodDescriptor) {
-        // TODO: older iOS and older PhantomJS fail to return the descriptor here
+        // nb. Some older iOS and older PhantomJS fail to return the descriptor. Don't do anything
+        // and don't bother to update the element.
         var realGet = methodDescriptor.get;
         methodDescriptor.get = function() {
           if (isFormMethodDialog(this)) {
@@ -12643,13 +12656,13 @@ this.store.dispatch((0,p.addItem)(a,h,f,u,n,s,o,c)),this.isSelectOneElement&&thi
      * submit event and give us a chance to respond.
      */
     var nativeFormSubmit = HTMLFormElement.prototype.submit;
-    function replacementFormSubmit() {
+    var replacementFormSubmit = function () {
       if (!isFormMethodDialog(this)) {
         return nativeFormSubmit.call(this);
       }
       var dialog = findNearestDialog(this);
       dialog && dialog.close();
-    }
+    };
     HTMLFormElement.prototype.submit = replacementFormSubmit;
 
     /**

@@ -75,8 +75,14 @@ var CheckBoxComponent = exports.CheckBoxComponent = function (_BaseComponent) {
       if (!this.component.label) {
         return null;
       }
+
+      var className = 'control-label';
+      if (this.component.input && this.component.validate && this.component.validate.required) {
+        className += ' field-required';
+      }
+
       this.labelElement = this.ce('label', {
-        class: 'control-label'
+        class: className
       });
 
       // Create the SPAN around the textNode for better style hooks
@@ -91,6 +97,9 @@ var CheckBoxComponent = exports.CheckBoxComponent = function (_BaseComponent) {
         this.labelElement.appendChild(this.labelSpan);
       }
       container.appendChild(this.labelElement);
+
+      this.errorContainer = this.ce('div', { class: 'error-container' });
+      container.appendChild(this.errorContainer);
     }
   }, {
     key: 'createInput',
