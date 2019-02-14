@@ -64,6 +64,9 @@ export var Validator = {
         if (!FormioUtils.boolValue(setting)) {
           return true;
         }
+        if (component.component.type == 'checkbox') {
+          return !component.isEmpty(value) && value;
+        }
         return !component.isEmpty(value);
       }
     },
