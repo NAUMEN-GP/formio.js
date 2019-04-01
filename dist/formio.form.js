@@ -7165,6 +7165,7 @@ var SelectComponent = exports.SelectComponent = function (_BaseComponent) {
         input.setAttribute('multiple', true);
       }
       var self = this;
+
       this.choices = new _choices2.default(input, {
         placeholder: !!this.component.placeholder,
         placeholderValue: this.component.placeholder,
@@ -7174,6 +7175,7 @@ var SelectComponent = exports.SelectComponent = function (_BaseComponent) {
           containerOuter: 'choices form-group formio-choices',
           containerInner: 'form-control'
         },
+        renderChoiceLimit: this.component.limit ? this.component.limit : -1,
         //настройки поиска здесь
         /*fuseOptions: {
           shouldSort: false,
