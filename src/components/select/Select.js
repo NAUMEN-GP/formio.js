@@ -154,6 +154,7 @@ export class SelectComponent extends BaseComponent {
       input.setAttribute('multiple', true);
     }
     var self = this;
+
     this.choices = new Choices(input, {
       placeholder: !!this.component.placeholder,
       placeholderValue: this.component.placeholder,
@@ -163,6 +164,7 @@ export class SelectComponent extends BaseComponent {
         containerOuter: 'choices form-group formio-choices',
         containerInner: 'form-control'
       },
+      renderChoiceLimit: this.component.limit ? this.component.limit : -1,
       //настройки поиска здесь
       /*fuseOptions: {
         shouldSort: false,
