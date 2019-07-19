@@ -128,6 +128,9 @@ var DateTimeComponent = exports.DateTimeComponent = function (_BaseComponent) {
         class: 'input-group-addon'
       });
       suffix.appendChild(this.getIcon(this.component.enableDate ? 'calendar' : 'time'));
+      suffix.onclick = function () {
+        input._flatpickr.toggle();
+      };
       inputGroup.appendChild(suffix);
       return suffix;
     }
