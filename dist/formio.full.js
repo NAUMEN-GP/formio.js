@@ -8125,6 +8125,14 @@ var _get = function get(object, property, receiver) {
 
 var _Base = require('../base/Base');
 
+var _each2 = require('lodash/each');
+
+var _each3 = _interopRequireDefault(_each2);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -8160,6 +8168,24 @@ var TextFieldComponent = exports.TextFieldComponent = function (_BaseComponent) 
       info.attr.type = 'text';
       info.changeEvent = 'input';
       return info;
+    }
+  }, {
+    key: 'isEmpty',
+    value: function isEmpty(value) {
+      if (this.validateMultiple(value)) {
+        var result = false;
+        if (value == null || value.length === 0) {
+          result = true;
+        }
+        (0, _each3.default)(value, function (val) {
+          if (val == null || val.length === 0) {
+            result = true;
+          }
+        });
+        return result;
+      } else {
+        return value == null || value.length === 0;
+      }
     }
   }, {
     key: 'createHint',
@@ -8221,7 +8247,7 @@ var TextFieldComponent = exports.TextFieldComponent = function (_BaseComponent) 
   return TextFieldComponent;
 }(_Base.BaseComponent);
 
-},{"../base/Base":4}],36:[function(require,module,exports){
+},{"../base/Base":4,"lodash/each":253}],36:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };

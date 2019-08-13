@@ -11,6 +11,12 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _Base = require('../base/Base');
 
+var _each2 = require('lodash/each');
+
+var _each3 = _interopRequireDefault(_each2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -34,6 +40,24 @@ var TextFieldComponent = exports.TextFieldComponent = function (_BaseComponent) 
       info.attr.type = 'text';
       info.changeEvent = 'input';
       return info;
+    }
+  }, {
+    key: 'isEmpty',
+    value: function isEmpty(value) {
+      if (this.validateMultiple(value)) {
+        var result = false;
+        if (value == null || value.length === 0) {
+          result = true;
+        }
+        (0, _each3.default)(value, function (val) {
+          if (val == null || val.length === 0) {
+            result = true;
+          }
+        });
+        return result;
+      } else {
+        return value == null || value.length === 0;
+      }
     }
   }, {
     key: 'createHint',
