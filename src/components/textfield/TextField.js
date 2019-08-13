@@ -1,4 +1,5 @@
 import { BaseComponent } from '../base/Base';
+import _each from "lodash/each";
 export class TextFieldComponent extends BaseComponent {
   elementInfo() {
     let info = super.elementInfo();
@@ -6,6 +7,23 @@ export class TextFieldComponent extends BaseComponent {
     info.attr.type = 'text';
     info.changeEvent = 'input';
     return info;
+  }
+
+  isEmpty(value) {
+    if (this.validateMultiple(value)) {
+      var result = false;
+      if (value == null || value.length === 0) {
+        result = true;
+      }
+      _each(value, (val) => {
+        if (val == null || val.length === 0) {
+          result = true;
+        }
+      });
+      return result;
+    } else {
+      return value == null || value.length === 0;
+    }
   }
 
   createHint(container){
