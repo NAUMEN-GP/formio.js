@@ -103,11 +103,45 @@ export class FileComponent extends BaseComponent {
 
   }
 
+  createFileIcon(filename) {
+    var ext = filename.split('.').pop();
+    var icon = 'document.svg';
+    switch (ext) {
+      case 'doc':
+      case 'dot':
+      case 'docx':
+        icon = 'word.png';
+        break;
+      case 'xls':
+      case 'xlt':
+      case 'xlsx':
+        icon = 'excel.png';
+        break;
+      case 'ppt':
+      case 'pptx':
+      case 'ppsx':
+        icon = 'ppoint.png';
+        break;
+      case 'pdf':
+        icon = 'pdf.png';
+        break;
+      default:
+    }
+
+    const img = this.ce('img', {src: 'assets/ui/assets/images/formio/' + icon,
+                                style: 'margin-right: 10px; height: 20px;'});
+
+    img.onerror((event) => event.target.style.display='none');
+    img.onerror((event) => console.log(event));
+
+    return img;
+  }
+
   createFileLink(file) {
     return this.ce('a', {
       href: file.url, target: '_blank',
       onClick: this.getFile.bind(this, file)
-    }, file.name);
+    }, [this.createFileIcon(file.name), file.name]);
   }
 
   buildImageList() {
