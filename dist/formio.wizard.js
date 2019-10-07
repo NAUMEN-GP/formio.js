@@ -5290,12 +5290,41 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       return this.ce('li', { class: 'list-group-item' }, this.ce('div', { class: 'mt-5' }, [this.createFileLink(fileInfo.data), removeIcon]));
     }
   }, {
+    key: 'createFileIcon',
+    value: function createFileIcon(filename) {
+      var ext = filename.split('.').pop();
+      var icon = 'document.svg';
+      switch (ext) {
+        case 'doc':
+        case 'dot':
+        case 'docx':
+          icon = 'word.png';
+          break;
+        case 'xls':
+        case 'xlt':
+        case 'xlsx':
+          icon = 'excel.png';
+          break;
+        case 'ppt':
+        case 'pptx':
+        case 'ppsx':
+          icon = 'ppoint.png';
+          break;
+        case 'pdf':
+          icon = 'pdf.png';
+          break;
+        default:
+      }
+
+      return this.ce('img', { src: 'assets/ui/assets/images/formio/' + icon });
+    }
+  }, {
     key: 'createFileLink',
     value: function createFileLink(file) {
       return this.ce('a', {
         href: file.url, target: '_blank',
         onClick: this.getFile.bind(this, file)
-      }, file.name);
+      }, [this.createFileIcon(file.name), file.name]);
     }
   }, {
     key: 'buildImageList',
