@@ -128,7 +128,13 @@ export class FileComponent extends BaseComponent {
       default:
     }
 
-    return this.ce('img', {src: 'assets/ui/assets/images/formio/' + icon});
+    const img = this.ce('img', {src: 'assets/ui/assets/images/formio/' + icon,
+                                style: 'margin-right: 10px; height: 20px;'});
+
+    img.onerror((event) => event.target.style.display='none');
+    img.onerror((event) => console.log(event));
+
+    return img;
   }
 
   createFileLink(file) {

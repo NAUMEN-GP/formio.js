@@ -5316,7 +5316,17 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
         default:
       }
 
-      return this.ce('img', { src: 'assets/ui/assets/images/formio/' + icon });
+      var img = this.ce('img', { src: 'assets/ui/assets/images/formio/' + icon,
+        style: 'margin-right: 10px; height: 20px;' });
+
+      img.onerror(function (event) {
+        return event.target.style.display = 'none';
+      });
+      img.onerror(function (event) {
+        return console.log(event);
+      });
+
+      return img;
     }
   }, {
     key: 'createFileLink',
