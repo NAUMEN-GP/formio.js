@@ -5318,12 +5318,8 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
 
       var img = this.ce('img', { src: 'assets/ui/assets/images/formio/' + icon,
         style: 'margin-right: 10px; height: 20px;' });
-
-      img.onerror(function (event) {
+      img.addEventListener('error', function (event) {
         return event.target.style.display = 'none';
-      });
-      img.onerror(function (event) {
-        return console.log(event);
       });
 
       return img;
