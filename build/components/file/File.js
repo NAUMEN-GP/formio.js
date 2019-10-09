@@ -181,7 +181,7 @@ var FileComponent = exports.FileComponent = function (_BaseComponent) {
       return this.ce('a', {
         href: file.url, target: '_blank',
         onClick: this.getFile.bind(this, file)
-      }, [this.createFileIcon(file.name), file.name]);
+      }, file.name);
     }
   }, {
     key: 'buildImageList',
